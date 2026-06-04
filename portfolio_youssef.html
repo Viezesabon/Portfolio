@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef Aitiddouch | Portfolio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+:root{
+  --green:#00ff41;
+  --red:#ff4141;
+  --amber:#ffaa00;
+  --dim:rgba(0,255,65,0.12);
+  --mid:rgba(0,255,65,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+
+body{
+  background:#000;
+  color:var(--green);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;
+  width:16px;height:16px;
+  border:1px solid var(--green);
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.15s,height 0.15s,opacity 0.15s;
+}
+.cursor-dot{
+  position:fixed;
+  width:4px;height:4px;
+  background:var(--green);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+}
+.cursor.expanded{width:40px;height:40px;opacity:0.5;}
+
+/* SCANLINE */
+.scanline{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.012) 2px,rgba(0,255,65,0.012) 4px);
+  pointer-events:none;
+  z-index:998;
+}
+
+/* MOVING SCAN BAR */
+.scanbar{
+  position:fixed;
+  top:-5%;left:0;right:0;
+  height:5%;
+  background:linear-gradient(180deg,transparent,rgba(0,255,65,0.03),transparent);
+  pointer-events:none;
+  z-index:997;
+  animation:scanbar 6s linear infinite;
+}
+@keyframes scanbar{0%{top:-5%;}100%{top:105%;}}
+
+canvas#rain{
+  position:fixed;top:0;left:0;
+  opacity:0.15;
+  pointer-events:none;
+  z-index:0;
+}
+
+.container{
+  max-width:960px;
+  margin:0 auto;
+  padding:2rem 1.5rem 5rem;
+  position:relative;
+  z-index:1;
+}
+
+/* GLITCH TITLE */
+.glitch{
+  position:relative;
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(2.2rem,7vw,5rem);
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.04em;
+  animation:flicker 9s infinite;
+}
+.glitch::before,.glitch::after{
+  content:attr(data-text);
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  font-family:'Rajdhani',sans-serif;
+  font-size:inherit;
+  font-weight:700;
+  letter-spacing:inherit;
+}
+.glitch::before{
+  color:#ff004f;
+  animation:glitch1 3s infinite;
+  clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);
+}
+.glitch::after{
+  color:#00eeff;
+  animation:glitch2 3s infinite;
+  clip-path:polygon(0 55%,100% 55%,100% 70%,0 70%);
+}
+@keyframes glitch1{
+  0%,90%,100%{transform:translate(0);}
+  92%{transform:translate(-3px,1px);}
+  94%{transform:translate(3px,-1px);}
+  96%{transform:translate(-2px,2px);}
+}
+@keyframes glitch2{
+  0%,88%,100%{transform:translate(0);}
+  90%{transform:translate(3px,-2px);}
+  93%{transform:translate(-3px,1px);}
+  96%{transform:translate(2px,-1px);}
+}
+@keyframes flicker{
+  0%,94%,100%{opacity:1;}
+  95%{opacity:0.3;}
+  96%{opacity:1;}
+  97%{opacity:0.1;}
+  98%{opacity:1;}
+}
+
+/* HEADER */
+.header{
+  border:1px solid var(--green);
+  padding:2.5rem 2rem;
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.header-top-label{
+  font-size:10px;
+  color:var(--mid);
+  letter-spacing:0.2em;
+  margin-bottom:0.75rem;
+}
+.header::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scan 3s linear infinite;
+}
+@keyframes scan{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+.subtitle{
+  font-size:11px;
+  color:var(--mid);
+  letter-spacing:0.15em;
+  margin-top:0.6rem;
+}
+
+.blink{animation:blink 1.1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* STATUS */
+.status-bar{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;}
+.status-item{font-size:10px;color:rgba(0,255,65,0.6);display:flex;align-items:center;gap:0.4rem;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,0.5);}50%{box-shadow:0 0 0 5px rgba(0,255,65,0);}}
+
+/* SECTION */
+.section{margin-bottom:2.5rem;}
+.sec-label{
+  font-size:10px;
+  color:rgba(0,255,65,0.5);
+  letter-spacing:0.2em;
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,65,0.2),transparent);}
+
+/* WARNING */
+.warning{
+  border:1px solid var(--red);
+  padding:1rem 1.5rem;
+  background:rgba(255,65,65,0.03);
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.warning::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  animation:scan 4s linear infinite;
+}
+.warning-label{font-size:9px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.4rem;}
+.warning p{font-size:11px;color:rgba(255,65,65,0.55);line-height:1.7;}
+
+/* PROJECTS */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+
+.pcard{
+  background:#000;
+  padding:1.5rem;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.3s;
+}
+.pcard:hover{background:rgba(0,255,65,0.04);}
+
+.pcard .top-bar{
+  position:absolute;
+  top:0;left:-100%;width:60%;height:1px;
+  background:var(--green);
+  transition:left 0.6s ease;
+}
+.pcard:hover .top-bar{left:100%;}
+
+.pcard-id{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.18em;margin-bottom:0.4rem;}
+.pcard-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.25rem;font-weight:600;
+  color:var(--green);
+  margin-bottom:0.5rem;
+  transition:text-shadow 0.3s;
+}
+.pcard:hover .pcard-title{text-shadow:0 0 12px rgba(0,255,65,0.6);}
+.pcard-desc{font-size:11px;color:rgba(0,255,65,0.5);line-height:1.75;margin-bottom:1rem;}
+
+.tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.tag{font-size:9px;letter-spacing:0.08em;color:var(--green);border:1px solid rgba(0,255,65,0.2);padding:2px 7px;}
+.tag.r{color:var(--red);border-color:rgba(255,65,65,0.25);}
+.tag.a{color:var(--amber);border-color:rgba(255,170,0,0.25);}
+
+.featured{grid-column:1/-1;}
+
+/* CORNER BRACKETS */
+.br-tl,.br-tr,.br-bl,.br-br{position:absolute;width:10px;height:10px;}
+.br-tl{top:0;left:0;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.br-tr{top:0;right:0;border-top:1px solid var(--green);border-right:1px solid var(--green);}
+.br-bl{bottom:0;left:0;border-bottom:1px solid var(--green);border-left:1px solid var(--green);}
+.br-br{bottom:0;right:0;border-bottom:1px solid var(--green);border-right:1px solid var(--green);}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+.cat-label{font-size:9px;color:rgba(0,255,65,0.35);letter-spacing:0.15em;padding:0.6rem 0 0.2rem;grid-column:1/-1;}
+.skill{background:#000;padding:0.9rem 1rem;transition:background 0.2s;}
+.skill:hover{background:rgba(0,255,65,0.05);}
+.skill-name{font-size:11px;color:var(--green);}
+.skill-sub{font-size:9px;color:rgba(0,255,65,0.35);margin-top:1px;}
+.skill-bar{height:1px;background:rgba(0,255,65,0.1);margin-top:0.6rem;position:relative;}
+.skill-fill{
+  position:absolute;top:0;left:0;height:1px;
+  background:var(--green);
+  width:0;
+  transition:width 1.8s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 6px rgba(0,255,65,0.8);
+}
+
+/* TYPED TERMINAL */
+.terminal{
+  border:1px solid rgba(0,255,65,0.25);
+  padding:1.25rem 1.5rem;
+  background:rgba(0,255,65,0.02);
+  font-size:11px;
+  line-height:2;
+  color:rgba(0,255,65,0.6);
+}
+.terminal .prompt{color:var(--green);}
+.terminal .val{color:#fff;}
+
+/* CONTACT */
+.cline{font-size:11px;color:rgba(0,255,65,0.5);margin-bottom:0.4rem;display:flex;gap:1rem;}
+.cline span{color:var(--green);}
+
+/* FOOTER */
+.footer{font-size:9px;color:rgba(0,255,65,0.15);letter-spacing:0.1em;margin-top:3rem;}
+
+/* HOVER RIPPLE on cards */
+.pcard{isolation:isolate;}
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(0,255,65,0.4);
+  width:10px;height:10px;
+  transform:translate(-50%,-50%) scale(0);
+  animation:ripple 0.6s linear forwards;
+  pointer-events:none;
+}
+@keyframes ripple{
+  to{transform:translate(-50%,-50%) scale(20);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="scanline"></div>
+<div class="scanbar"></div>
+<canvas id="rain"></canvas>
+
+<div class="container">
+
+  <header class="header">
+    <div class="header-top-label">// PORTFOLIO_v3.0 &gt; STUDENT_RECORD &gt; HBO_ICT &gt; CYBER_SECURITY</div>
+    <h1 class="glitch" data-text="YOUSSEF AITIDDOUCH">YOUSSEF AITIDDOUCH<span class="blink">_</span></h1>
+    <p class="subtitle">CYBER SECURITY TRACK &nbsp;&#183;&nbsp; HOGESCHOOL VAN AMSTERDAM &nbsp;&#183;&nbsp; YEAR 2</p>
+    <div class="status-bar">
+      <div class="status-item"><div class="dot"></div>SYSTEEM ONLINE</div>
+      <div class="status-item"><div class="dot"></div>SEMESTER 2 ACTIEF</div>
+      <div class="status-item"><div class="dot" style="background:var(--amber);box-shadow:none;"></div>STAGE GEZOCHT: SEP 2025</div>
+      <div class="status-item"><div class="dot" style="background:var(--red);box-shadow:none;animation:none;"></div>LOCATIE: AMSTERDAM</div>
+    </div>
+  </header>
+
+  <div class="warning">
+    <div class="warning-label">// ETHICS_WARNING.txt</div>
+    <p>Dit portfolio bevat werk uit de Cyber Security en Dark Tech cursussen. De projecten onderzoeken hoe technologie misbruikt kan worden en hoe je daar als professional tegen beschermt.</p>
+  </div>
+
+  <section class="section">
+    <div class="sec-label">// PROJECT_LOG [04 ENTRIES]</div>
+    <div class="projects">
+
+      <div class="pcard featured" style="border:1px solid rgba(0,255,65,0.25);" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="br-tl"></div><div class="br-tr"></div><div class="br-bl"></div><div class="br-br"></div>
+        <div class="pcard-id">PROJECT_01 &gt; DARK_TECH &gt; SEMESTER_2 &gt; [FEATURED]</div>
+        <div class="pcard-title">LINDER: FUNCTION CREEP</div>
+        <p class="pcard-desc">Een studentenmatch-app die stap voor stap meer data opeist dan waarvoor de gebruiker toestemming heeft gegeven. Jij zegt ja tegen matches vinden. De app interpreteert dat als ja tegen 24/7 gevolgd worden. Dat is function creep.</p>
+        <p class="pcard-desc">Mijn bijdrage: het premium feature systeem dat gebruikers beloont voor het inleveren van privacy, en de live kaartcomponent die realtime laat zien waar jij en je matches zijn. Gebouwd in TypeScript, React Native en Supabase.</p>
+        <div class="tags">
+          <span class="tag">REACT NATIVE</span>
+          <span class="tag">TYPESCRIPT</span>
+          <span class="tag">SUPABASE</span>
+          <span class="tag">EXPO</span>
+          <span class="tag r">DARK PATTERNS</span>
+          <span class="tag r">FUNCTION CREEP</span>
+          <span class="tag">REALTIME MAP</span>
+          <span class="tag">SCRUM</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_02 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">MALWARE ANALYSE</div>
+        <p class="pcard-desc">Analyse van malware aan de hand van echte incidenten. Gedrag van de malware in kaart gebracht: hoe het systeem binnenkomt, wat het doet, welke sporen het achterlaat.</p>
+        <div class="tags">
+          <span class="tag r">MALWARE</span>
+          <span class="tag">INCIDENT ANALYSE</span>
+          <span class="tag">WIRESHARK</span>
+          <span class="tag">THREAT BEHAVIOUR</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_03 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">FORENSISCH RAPPORT</div>
+        <p class="pcard-desc">Forensisch rapport opgebouwd op basis van de malware analyse. Documentatie van bevindingen, bewijsmateriaal en conclusies zoals een forensisch analist dat aanlevert aan een opdrachtgever.</p>
+        <div class="tags">
+          <span class="tag">FORENSISCH RAPPORT</span>
+          <span class="tag a">BEWIJSLAST</span>
+          <span class="tag">DOCUMENTATIE</span>
+          <span class="tag">INCIDENT RESPONSE</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_04 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">RISICO ANALYSE: GLOWLOCK</div>
+        <p class="pcard-desc">Risico analyse van het Glowlock deurslot systeem. Kwetsbaarheden in kaart gebracht, risico's gewogen en aanbevelingen gedaan om het systeem te versterken tegen aanvallen.</p>
+        <div class="tags">
+          <span class="tag a">RISICO ANALYSE</span>
+          <span class="tag">IOT SECURITY</span>
+          <span class="tag r">KWETSBAARHEDEN</span>
+          <span class="tag">AANBEVELINGEN</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// SKILL_MATRIX</div>
+    <div class="skills-grid">
+
+      <div class="cat-label">// SECURITY_TOOLS</div>
+      <div class="skill"><div class="skill-name">Wireshark</div><div class="skill-sub">packet analyse</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Linux</div><div class="skill-sub">CLI, bash, netwerk</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Nmap</div><div class="skill-sub">netwerk scanning</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Burp Suite</div><div class="skill-sub">web pentesting</div><div class="skill-bar"><div class="skill-fill" data-w="45"></div></div></div>
+
+      <div class="cat-label">// DEV_STACK</div>
+      <div class="skill"><div class="skill-name">Python</div><div class="skill-sub">scripting & tools</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">TypeScript</div><div class="skill-sub">geleerd dit semester</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">React Native</div><div class="skill-sub">project ervaring</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">SQL</div><div class="skill-sub">databases & queries</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Supabase</div><div class="skill-sub">backend & realtime</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Git / GitLab</div><div class="skill-sub">versiebeheer</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+
+      <div class="cat-label">// ANALYSE & PROCESS</div>
+      <div class="skill"><div class="skill-name">Malware analyse</div><div class="skill-sub">incident onderzoek</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Forensisch rapport</div><div class="skill-sub">documentatie</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Risico analyse</div><div class="skill-sub">kwetsbaarheden</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Scrum</div><div class="skill-sub">team van 5</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Dark Tech analyse</div><div class="skill-sub">ethisch denken</div><div class="skill-bar"><div class="skill-fill" data-w="75"></div></div></div>
+      <div class="skill"><div class="skill-name">ERD / UML</div><div class="skill-sub">systeemontwerp</div><div class="skill-bar"><div class="skill-fill" data-w="50"></div></div></div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// TERMINAL</div>
+    <div class="terminal" id="terminalBox"></div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// CONTACT_INFO</div>
+    <div class="cline">Naam: <span>Youssef Aitiddouch</span></div>
+    <div class="cline">Studie: <span>HBO ICT &mdash; Cyber Security &mdash; HvA</span></div>
+    <div class="cline">Stad: <span>Amsterdam</span></div>
+    <div class="cline">Stage beschikbaar: <span>September 2025</span></div>
+    <div class="cline">Interesse: <span>Forensisch ICT Analist</span></div>
+  </section>
+
+  <div class="footer">// END_OF_FILE &gt; youssef_aitiddouch_portfolio_v3.html &gt; ALL_RIGHTS_RESERVED</div>
+
+</div>
+
+<script>
+/* CUSTOM CURSOR */
+const cur=document.getElementById('cursor');
+const dot=document.getElementById('cursorDot');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';
+  cur.style.top=e.clientY+'px';
+  dot.style.left=e.clientX+'px';
+  dot.style.top=e.clientY+'px';
+});
+document.querySelectorAll('.pcard,.skill').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('expanded'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('expanded'));
+});
+
+/* MATRIX RAIN */
+const canvas=document.getElementById('rain');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();
+window.addEventListener('resize',()=>{resize();initDrops();});
+const chars='アイウエオカキクケコサシスセソ0123456789ABCDEF></?!';
+let drops=[];
+function initDrops(){drops=Array(Math.floor(canvas.width/18)).fill(1);}
+initDrops();
+function rain(){
+  ctx.fillStyle='rgba(0,0,0,0.045)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font='13px monospace';
+  drops.forEach((y,i)=>{
+    const bright=Math.random()>0.95;
+    ctx.fillStyle=bright?'#ffffff':'#00ff41';
+    ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*18,y*18);
+    if(y*18>canvas.height&&Math.random()>0.975)drops[i]=0;
+    drops[i]++;
+  });
+}
+setInterval(rain,45);
+
+/* SKILL BARS */
+setTimeout(()=>{
+  document.querySelectorAll('.skill-fill').forEach(el=>{
+    el.style.width=el.dataset.w+'%';
+  });
+},400);
+
+/* RIPPLE EFFECT */
+function rippleEffect(e,el){
+  const r=document.createElement('div');
+  r.className='ripple';
+  const rect=el.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px';
+  r.style.top=(e.clientY-rect.top)+'px';
+  el.appendChild(r);
+  setTimeout(()=>r.remove(),700);
+}
+
+/* TERMINAL TYPEWRITER */
+const lines=[
+  {p:'root@hva:~$',cmd:' whoami',delay:0},
+  {p:'',cmd:'youssef_aitiddouch // cyber security student',delay:800,plain:true},
+  {p:'root@hva:~$',cmd:' cat doel.txt',delay:1600},
+  {p:'',cmd:'forensisch ICT analist worden. bij voorkeur politie.',delay:2400,plain:true},
+  {p:'root@hva:~$',cmd:' ls projects/',delay:3200},
+  {p:'',cmd:'linder/  malware_analyse/  forensisch_rapport/  glowlock_risico/',delay:4000,plain:true},
+  {p:'root@hva:~$',cmd:' _',delay:4800,blink:true},
+];
+const tb=document.getElementById('terminalBox');
+lines.forEach(l=>{
+  setTimeout(()=>{
+    const line=document.createElement('div');
+    if(l.plain){
+      line.style.color='rgba(0,255,65,0.5)';
+      line.textContent=l.cmd;
+    } else if(l.blink){
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span class="blink" style="color:var(--green)">_</span>';
+    } else {
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span style="color:#fff">'+l.cmd+'</span>';
+    }
+    tb.appendChild(line);
+  },l.delay);
+});
+</script>
+</body>
+</html>
