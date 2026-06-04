@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef Aitiddouch | Portfolio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+:root{
+  --green:#00ff41;
+  --red:#ff4141;
+  --amber:#ffaa00;
+  --dim:rgba(0,255,65,0.12);
+  --mid:rgba(0,255,65,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+
+body{
+  background:#000;
+  color:var(--green);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;
+  width:16px;height:16px;
+  border:1px solid var(--green);
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.15s,height 0.15s,opacity 0.15s;
+}
+.cursor-dot{
+  position:fixed;
+  width:4px;height:4px;
+  background:var(--green);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+}
+.cursor.expanded{width:40px;height:40px;opacity:0.5;}
+
+/* SCANLINE */
+.scanline{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.012) 2px,rgba(0,255,65,0.012) 4px);
+  pointer-events:none;
+  z-index:998;
+}
+
+/* MOVING SCAN BAR */
+.scanbar{
+  position:fixed;
+  top:-5%;left:0;right:0;
+  height:5%;
+  background:linear-gradient(180deg,transparent,rgba(0,255,65,0.03),transparent);
+  pointer-events:none;
+  z-index:997;
+  animation:scanbar 6s linear infinite;
+}
+@keyframes scanbar{0%{top:-5%;}100%{top:105%;}}
+
+canvas#rain{
+  position:fixed;top:0;left:0;
+  opacity:0.15;
+  pointer-events:none;
+  z-index:0;
+}
+
+.container{
+  max-width:960px;
+  margin:0 auto;
+  padding:2rem 1.5rem 5rem;
+  position:relative;
+  z-index:1;
+}
+
+/* GLITCH TITLE */
+.glitch{
+  position:relative;
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(2.2rem,7vw,5rem);
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.04em;
+  animation:flicker 9s infinite;
+}
+.glitch::before,.glitch::after{
+  content:attr(data-text);
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  font-family:'Rajdhani',sans-serif;
+  font-size:inherit;
+  font-weight:700;
+  letter-spacing:inherit;
+}
+.glitch::before{
+  color:#ff004f;
+  animation:glitch1 3s infinite;
+  clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);
+}
+.glitch::after{
+  color:#00eeff;
+  animation:glitch2 3s infinite;
+  clip-path:polygon(0 55%,100% 55%,100% 70%,0 70%);
+}
+@keyframes glitch1{
+  0%,90%,100%{transform:translate(0);}
+  92%{transform:translate(-3px,1px);}
+  94%{transform:translate(3px,-1px);}
+  96%{transform:translate(-2px,2px);}
+}
+@keyframes glitch2{
+  0%,88%,100%{transform:translate(0);}
+  90%{transform:translate(3px,-2px);}
+  93%{transform:translate(-3px,1px);}
+  96%{transform:translate(2px,-1px);}
+}
+@keyframes flicker{
+  0%,94%,100%{opacity:1;}
+  95%{opacity:0.3;}
+  96%{opacity:1;}
+  97%{opacity:0.1;}
+  98%{opacity:1;}
+}
+
+/* HEADER */
+.header{
+  border:1px solid var(--green);
+  padding:2.5rem 2rem;
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.header-top-label{
+  font-size:10px;
+  color:var(--mid);
+  letter-spacing:0.2em;
+  margin-bottom:0.75rem;
+}
+.header::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scan 3s linear infinite;
+}
+@keyframes scan{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+.subtitle{
+  font-size:11px;
+  color:var(--mid);
+  letter-spacing:0.15em;
+  margin-top:0.6rem;
+}
+
+.blink{animation:blink 1.1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* STATUS */
+.status-bar{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;}
+.status-item{font-size:10px;color:rgba(0,255,65,0.6);display:flex;align-items:center;gap:0.4rem;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,0.5);}50%{box-shadow:0 0 0 5px rgba(0,255,65,0);}}
+
+/* SECTION */
+.section{margin-bottom:2.5rem;}
+.sec-label{
+  font-size:10px;
+  color:rgba(0,255,65,0.5);
+  letter-spacing:0.2em;
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,65,0.2),transparent);}
+
+/* WARNING */
+.warning{
+  border:1px solid var(--red);
+  padding:1rem 1.5rem;
+  background:rgba(255,65,65,0.03);
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.warning::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  animation:scan 4s linear infinite;
+}
+.warning-label{font-size:9px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.4rem;}
+.warning p{font-size:11px;color:rgba(255,65,65,0.55);line-height:1.7;}
+
+/* PROJECTS */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+
+.pcard{
+  background:#000;
+  padding:1.5rem;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.3s;
+}
+.pcard:hover{background:rgba(0,255,65,0.04);}
+
+.pcard .top-bar{
+  position:absolute;
+  top:0;left:-100%;width:60%;height:1px;
+  background:var(--green);
+  transition:left 0.6s ease;
+}
+.pcard:hover .top-bar{left:100%;}
+
+.pcard-id{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.18em;margin-bottom:0.4rem;}
+.pcard-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.25rem;font-weight:600;
+  color:var(--green);
+  margin-bottom:0.5rem;
+  transition:text-shadow 0.3s;
+}
+.pcard:hover .pcard-title{text-shadow:0 0 12px rgba(0,255,65,0.6);}
+.pcard-desc{font-size:11px;color:rgba(0,255,65,0.5);line-height:1.75;margin-bottom:1rem;}
+
+.tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.tag{font-size:9px;letter-spacing:0.08em;color:var(--green);border:1px solid rgba(0,255,65,0.2);padding:2px 7px;}
+.tag.r{color:var(--red);border-color:rgba(255,65,65,0.25);}
+.tag.a{color:var(--amber);border-color:rgba(255,170,0,0.25);}
+
+.featured{grid-column:1/-1;}
+
+/* CORNER BRACKETS */
+.br-tl,.br-tr,.br-bl,.br-br{position:absolute;width:10px;height:10px;}
+.br-tl{top:0;left:0;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.br-tr{top:0;right:0;border-top:1px solid var(--green);border-right:1px solid var(--green);}
+.br-bl{bottom:0;left:0;border-bottom:1px solid var(--green);border-left:1px solid var(--green);}
+.br-br{bottom:0;right:0;border-bottom:1px solid var(--green);border-right:1px solid var(--green);}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+.cat-label{font-size:9px;color:rgba(0,255,65,0.35);letter-spacing:0.15em;padding:0.6rem 0 0.2rem;grid-column:1/-1;}
+.skill{background:#000;padding:0.9rem 1rem;transition:background 0.2s;}
+.skill:hover{background:rgba(0,255,65,0.05);}
+.skill-name{font-size:11px;color:var(--green);}
+.skill-sub{font-size:9px;color:rgba(0,255,65,0.35);margin-top:1px;}
+.skill-bar{height:1px;background:rgba(0,255,65,0.1);margin-top:0.6rem;position:relative;}
+.skill-fill{
+  position:absolute;top:0;left:0;height:1px;
+  background:var(--green);
+  width:0;
+  transition:width 1.8s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 6px rgba(0,255,65,0.8);
+}
+
+/* TYPED TERMINAL */
+.terminal{
+  border:1px solid rgba(0,255,65,0.25);
+  padding:1.25rem 1.5rem;
+  background:rgba(0,255,65,0.02);
+  font-size:11px;
+  line-height:2;
+  color:rgba(0,255,65,0.6);
+}
+.terminal .prompt{color:var(--green);}
+.terminal .val{color:#fff;}
+
+/* CONTACT */
+.cline{font-size:11px;color:rgba(0,255,65,0.5);margin-bottom:0.4rem;display:flex;gap:1rem;}
+.cline span{color:var(--green);}
+
+/* FOOTER */
+.footer{font-size:9px;color:rgba(0,255,65,0.15);letter-spacing:0.1em;margin-top:3rem;}
+
+/* HOVER RIPPLE on cards */
+.pcard{isolation:isolate;}
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(0,255,65,0.4);
+  width:10px;height:10px;
+  transform:translate(-50%,-50%) scale(0);
+  animation:ripple 0.6s linear forwards;
+  pointer-events:none;
+}
+@keyframes ripple{
+  to{transform:translate(-50%,-50%) scale(20);opacity:0;}
+}
+
+@keyframes adflicker{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
+
+/* HEX GRID */
+canvas#hexgrid{
+  position:fixed;top:0;left:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.18;
+}
+
+/* VISITOR TOAST */
+#visitor-toast{
+  position:fixed;
+  bottom:1.5rem;right:1.5rem;
+  border:1px solid rgba(255,65,65,0.35);
+  background:rgba(0,0,0,0.95);
+  padding:0.75rem 1rem;
+  z-index:500;
+  width:220px;
+  transform:translateX(260px);
+  transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  pointer-events:none;
+}
+#visitor-toast.visible{transform:translateX(0);}
+#visitor-toast .vt-label{font-size:8px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.3rem;}
+#visitor-toast .vt-msg{font-size:10px;color:rgba(255,65,65,0.7);line-height:1.6;}
+#visitor-toast .vt-sub{font-size:8px;color:rgba(255,65,65,0.3);margin-top:0.3rem;}
+
+/* GLITCH BREACH overlay */
+#breach-overlay{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:900;
+  opacity:0;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,65,65,0.03) 0px,
+    rgba(255,65,65,0.03) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  transition:opacity 0.1s;
+}
+#breach-overlay.active{opacity:1;}
+
+/* KONAMI hint */
+#konami-hint{
+  position:fixed;bottom:1.5rem;left:1.5rem;
+  font-size:8px;color:rgba(0,255,65,0.12);
+  letter-spacing:0.15em;
+  z-index:500;
+  pointer-events:none;
+}
+
+/* HEADER HERO */
+#header-hero{display:flex;align-items:center;gap:2.5rem;margin:1.5rem 0 1.5rem;flex-wrap:wrap;}
+#hero-photo-wrap{position:relative;flex-shrink:0;width:200px;height:240px;}
+#hero-photo{width:200px;height:240px;object-fit:cover;object-position:center top;display:block;filter:grayscale(30%) contrast(1.1);border:1px solid rgba(0,255,65,0.3);}
+#lens-rain-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;opacity:0.55;z-index:2;}
+#photo-scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px);pointer-events:none;z-index:3;}
+#photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.75);border-top:1px solid rgba(0,255,65,0.2);font-size:8px;color:rgba(0,255,65,0.5);letter-spacing:0.15em;padding:4px 8px;z-index:4;}
+#hero-name{flex:1;min-width:200px;}
+#hero-name-text{font-family:'Rajdhani',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;line-height:1.0;letter-spacing:0.08em;color:var(--green);text-shadow:0 0 40px rgba(0,255,65,0.4),0 0 80px rgba(0,255,65,0.15);}
+#hero-sub-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.75rem;}
+.htag{font-size:9px;letter-spacing:0.15em;padding:3px 8px;border:1px solid rgba(0,255,65,0.2);color:rgba(0,255,65,0.5);}
+.htag.r{color:var(--red);border-color:rgba(255,65,65,0.25);}
+.htag.a{color:var(--amber);border-color:rgba(255,170,0,0.25);}
+#glasses-wrap,#name-behind,#glasses-hint,#glasses-svg,#hero-glasses{display:none;}
+
+/* CURSOR_TRAIL */
+.trail-dot{
+  position:fixed;
+  width:3px;height:3px;
+  background:var(--green);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9990;
+  opacity:0.6;
+  transition:opacity 0.4s;
+}
+
+/* MODAL OVERLAY */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:2000;
+  display:flex;align-items:flex-start;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+  overflow-y:auto;
+  padding:2rem 1rem 4rem;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+
+.modal{
+  width:100%;max-width:860px;
+  border:1px solid rgba(0,255,65,0.35);
+  background:#000;
+  position:relative;
+  transform:translateY(30px);
+  transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+.modal-backdrop.open .modal{transform:translateY(0);}
+
+.modal-topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(0,255,65,0.15);
+  padding:0.75rem 1.5rem;
+  font-size:9px;color:rgba(0,255,65,0.35);letter-spacing:0.18em;
+}
+.modal-close{
+  background:none;border:1px solid rgba(0,255,65,0.25);
+  color:var(--green);font-family:'Share Tech Mono',monospace;
+  font-size:10px;padding:3px 10px;cursor:pointer;
+  letter-spacing:0.1em;transition:all 0.2s;
+}
+.modal-close:hover{background:rgba(0,255,65,0.08);border-color:var(--green);}
+
+.modal-body{padding:2rem 1.5rem;}
+
+.modal-hero{
+  border:1px solid rgba(0,255,65,0.15);
+  padding:1.5rem;
+  margin-bottom:2rem;
+  position:relative;
+  background:rgba(0,255,65,0.02);
+}
+.modal-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scan 4s linear infinite;
+}
+.modal-project-id{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.2em;margin-bottom:0.5rem;}
+.modal-title{
+  font-family:'Rajdhani',sans-serif;font-size:2rem;font-weight:700;
+  color:var(--green);margin-bottom:0.75rem;
+  text-shadow:0 0 20px rgba(0,255,65,0.3);
+}
+.modal-tagline{font-size:12px;color:rgba(0,255,65,0.6);line-height:1.8;margin-bottom:1rem;}
+.modal-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+
+.modal-section{margin-bottom:2rem;}
+.modal-sec-label{
+  font-size:9px;color:rgba(0,255,65,0.4);letter-spacing:0.2em;
+  margin-bottom:0.8rem;padding-bottom:0.4rem;
+  border-bottom:1px solid rgba(0,255,65,0.1);
+  display:flex;align-items:center;gap:0.5rem;
+}
+.modal-sec-label::before{content:'//';color:rgba(0,255,65,0.2);}
+
+.modal-text{font-size:11px;color:rgba(0,255,65,0.55);line-height:1.85;margin-bottom:0.75rem;}
+
+/* TIER CARDS */
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(0,255,65,0.08);margin-top:0.5rem;}
+.tier-card{background:#000;padding:1rem;position:relative;}
+.tier-label{font-size:9px;letter-spacing:0.15em;margin-bottom:0.3rem;}
+.tier-label.green{color:rgba(0,255,65,0.5);}
+.tier-label.amber{color:var(--amber);}
+.tier-label.red{color:var(--red);}
+.tier-name{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;color:var(--green);margin-bottom:0.5rem;}
+.tier-feature{font-size:10px;color:rgba(0,255,65,0.45);line-height:1.8;padding-left:0.5rem;}
+.tier-feature.locked{color:rgba(255,65,65,0.4);}
+.tier-feature::before{content:'> ';}
+.tier-feature.locked::before{content:'x ';}
+.tier-data-req{
+  margin-top:0.75rem;font-size:9px;letter-spacing:0.08em;
+  padding:3px 8px;display:inline-block;
+}
+.tier-data-req.safe{color:rgba(0,255,65,0.5);border:1px solid rgba(0,255,65,0.2);}
+.tier-data-req.warn{color:var(--amber);border:1px solid rgba(255,170,0,0.3);}
+.tier-data-req.danger{color:var(--red);border:1px solid rgba(255,65,65,0.3);}
+
+/* TECH STACK TABLE */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+.stack-item{background:#000;padding:0.8rem 1rem;}
+.stack-tech{font-size:11px;color:var(--green);margin-bottom:2px;}
+.stack-role{font-size:9px;color:rgba(0,255,65,0.35);}
+
+/* ETHICS BLOCKS */
+.ethics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(0,255,65,0.08);}
+.ethics-item{background:#000;padding:1rem;}
+.ethics-item.bad .ethics-head{color:var(--red);}
+.ethics-item.good .ethics-head{color:rgba(0,255,65,0.7);}
+.ethics-head{font-size:9px;letter-spacing:0.15em;margin-bottom:0.4rem;}
+.ethics-body{font-size:10px;color:rgba(0,255,65,0.45);line-height:1.75;}
+
+/* ERD VISUAL */
+.erd-visual{
+  border:1px solid rgba(0,255,65,0.15);
+  padding:1.5rem;background:rgba(0,255,65,0.01);
+  font-size:10px;color:rgba(0,255,65,0.5);
+  line-height:2;
+  font-family:'Share Tech Mono',monospace;
+}
+.erd-entity{color:var(--green);font-weight:bold;}
+.erd-rel{color:rgba(0,255,65,0.3);}
+.erd-arrow{color:var(--amber);}
+
+/* PROCESS TIMELINE */
+.timeline{position:relative;padding-left:1.5rem;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(0,255,65,0.15);}
+.tl-item{position:relative;margin-bottom:1.25rem;}
+.tl-item::before{content:'';position:absolute;left:-1.5rem;top:4px;width:6px;height:6px;border:1px solid var(--green);background:#000;}
+.tl-sprint{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.15em;margin-bottom:2px;}
+.tl-desc{font-size:11px;color:rgba(0,255,65,0.55);line-height:1.75;}
+
+/* DARK PATTERN HIGHLIGHT */
+.dark-pattern-box{
+  border:1px solid rgba(255,65,65,0.3);
+  padding:1rem 1.25rem;
+  background:rgba(255,65,65,0.02);
+  position:relative;margin-bottom:1rem;
+}
+.dark-pattern-box::before{
+  content:'! DARK PATTERN GEDETECTEERD';
+  position:absolute;top:-8px;left:10px;
+  font-size:8px;color:var(--red);letter-spacing:0.2em;
+  background:#000;padding:0 6px;
+}
+.dark-pattern-box p{font-size:11px;color:rgba(255,65,65,0.5);line-height:1.75;}
+
+@media(max-width:600px){
+  .ethics-grid{grid-template-columns:1fr;}
+  .modal-title{font-size:1.4rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="scanline"></div>
+<div class="scanbar"></div>
+<canvas id="rain"></canvas>
+<canvas id="hexgrid"></canvas>
+<div id="breach-overlay"></div>
+<div id="visitor-toast">
+  <div class="vt-label">// LIVE_MONITOR</div>
+  <div class="vt-msg" id="vt-msg">iemand bekijkt dit portfolio.</div>
+  <div class="vt-sub" id="vt-sub">locatie: onbekend</div>
+</div>
+<div id="konami-hint">try: ↑ ↑ ↓ ↓ ← → ← → B A</div>
+
+<div class="container">
+
+  <header class="header">
+    <div class="header-top-label">// PORTFOLIO_v3.0 &gt; STUDENT_RECORD &gt; HBO_ICT &gt; CYBER_SECURITY</div>
+
+    <!-- HEADER HERO: photo left, name right -->
+    <div id="header-hero">
+      <div id="hero-photo-wrap">
+        <canvas id="lens-rain-canvas"></canvas>
+        <img id="hero-photo" src="youssef_photo.png" alt="Youssef Aitiddouch"/>
+        <div id="photo-scanline"></div>
+        <div id="photo-label">// IDENTITY_CONFIRMED</div>
+      </div>
+      <div id="hero-name">
+        <div id="hero-name-text">YOUSSEF<br>AITIDDOUCH</div>
+        <div id="hero-sub-tags">
+          <span class="htag">CYBER SECURITY</span>
+          <span class="htag r">DARK TECH</span>
+          <span class="htag a">HVA AMSTERDAM</span>
+        </div>
+      </div>
+    </div><!-- end header-hero -->
+    <p class="subtitle">CYBER SECURITY TRACK &nbsp;&#183;&nbsp; HOGESCHOOL VAN AMSTERDAM &nbsp;&#183;&nbsp; YEAR 2</p>
+    <div class="status-bar">
+      <div class="status-item"><div class="dot"></div>SYSTEEM ONLINE</div>
+      <div class="status-item"><div class="dot"></div>SEMESTER 2 ACTIEF</div>
+      <div class="status-item"><div class="dot" style="background:var(--amber);box-shadow:none;"></div>STAGE GEZOCHT: SEP 2025</div>
+      <div class="status-item"><div class="dot" style="background:var(--red);box-shadow:none;animation:none;"></div>LOCATIE: AMSTERDAM</div>
+    </div>
+  </header>
+
+  <div class="warning">
+    <div class="warning-label">// ETHICS_WARNING.txt</div>
+    <p>Dit portfolio bevat werk uit de Cyber Security en Dark Tech cursussen. De projecten onderzoeken hoe technologie misbruikt kan worden en hoe je daar als professional tegen beschermt.</p>
+  </div>
+
+  <section class="section">
+    <div class="sec-label">// PROJECT_LOG [04 ENTRIES]</div>
+    <div class="projects">
+
+      <div class="pcard featured" style="border:1px solid rgba(0,255,65,0.25);cursor:pointer;" onclick="rippleEffect(event,this);openLinder()">
+        <div class="top-bar"></div>
+        <div class="br-tl"></div><div class="br-tr"></div><div class="br-bl"></div><div class="br-br"></div>
+        <div class="pcard-id">PROJECT_01 &gt; DARK_TECH &gt; SEMESTER_2 &gt; [FEATURED]</div>
+        <div class="pcard-title">LINDER: FUNCTION CREEP</div>
+        <p class="pcard-desc">Een studentenmatch-app die stap voor stap meer data opeist dan waarvoor de gebruiker toestemming heeft gegeven. Jij zegt ja tegen matches vinden. De app interpreteert dat als ja tegen 24/7 gevolgd worden. Dat is function creep.</p>
+        <p class="pcard-desc">Mijn bijdrage: het premium feature systeem dat gebruikers beloont voor het inleveren van privacy, en de live kaartcomponent die realtime laat zien waar jij en je matches zijn. Gebouwd in TypeScript, React Native en Supabase.</p>
+        <p style="font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.18em;margin-bottom:0.75rem;">[ KLIK VOOR VOLLEDIGE PROJECTDETAILS ]</p>
+        <div class="tags">
+          <span class="tag">REACT NATIVE</span>
+          <span class="tag">TYPESCRIPT</span>
+          <span class="tag">SUPABASE</span>
+          <span class="tag">EXPO</span>
+          <span class="tag r">DARK PATTERNS</span>
+          <span class="tag r">FUNCTION CREEP</span>
+          <span class="tag">REALTIME MAP</span>
+          <span class="tag">SCRUM</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_02 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">MALWARE ANALYSE</div>
+        <p class="pcard-desc">Analyse van malware aan de hand van echte incidenten. Gedrag van de malware in kaart gebracht: hoe het systeem binnenkomt, wat het doet, welke sporen het achterlaat.</p>
+        <div class="tags">
+          <span class="tag r">MALWARE</span>
+          <span class="tag">INCIDENT ANALYSE</span>
+          <span class="tag">WIRESHARK</span>
+          <span class="tag">THREAT BEHAVIOUR</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_03 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">FORENSISCH RAPPORT</div>
+        <p class="pcard-desc">Forensisch rapport opgebouwd op basis van de malware analyse. Documentatie van bevindingen, bewijsmateriaal en conclusies zoals een forensisch analist dat aanlevert aan een opdrachtgever.</p>
+        <div class="tags">
+          <span class="tag">FORENSISCH RAPPORT</span>
+          <span class="tag a">BEWIJSLAST</span>
+          <span class="tag">DOCUMENTATIE</span>
+          <span class="tag">INCIDENT RESPONSE</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this)">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_04 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">RISICO ANALYSE: GLOWLOCK</div>
+        <p class="pcard-desc">Risico analyse van het Glowlock deurslot systeem. Kwetsbaarheden in kaart gebracht, risico's gewogen en aanbevelingen gedaan om het systeem te versterken tegen aanvallen.</p>
+        <div class="tags">
+          <span class="tag a">RISICO ANALYSE</span>
+          <span class="tag">IOT SECURITY</span>
+          <span class="tag r">KWETSBAARHEDEN</span>
+          <span class="tag">AANBEVELINGEN</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// SKILL_MATRIX</div>
+    <div class="skills-grid">
+
+      <div class="cat-label">// SECURITY_TOOLS</div>
+      <div class="skill"><div class="skill-name">Wireshark</div><div class="skill-sub">packet analyse</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Linux</div><div class="skill-sub">CLI, bash, netwerk</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Nmap</div><div class="skill-sub">netwerk scanning</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Burp Suite</div><div class="skill-sub">web pentesting</div><div class="skill-bar"><div class="skill-fill" data-w="45"></div></div></div>
+
+      <div class="cat-label">// DEV_STACK</div>
+      <div class="skill"><div class="skill-name">Python</div><div class="skill-sub">scripting & tools</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">TypeScript</div><div class="skill-sub">geleerd dit semester</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">React Native</div><div class="skill-sub">project ervaring</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">SQL</div><div class="skill-sub">databases & queries</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Supabase</div><div class="skill-sub">backend & realtime</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Git / GitLab</div><div class="skill-sub">versiebeheer</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+
+      <div class="cat-label">// ANALYSE & PROCESS</div>
+      <div class="skill"><div class="skill-name">Malware analyse</div><div class="skill-sub">incident onderzoek</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Forensisch rapport</div><div class="skill-sub">documentatie</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Risico analyse</div><div class="skill-sub">kwetsbaarheden</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Scrum</div><div class="skill-sub">team van 5</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Dark Tech analyse</div><div class="skill-sub">ethisch denken</div><div class="skill-bar"><div class="skill-fill" data-w="75"></div></div></div>
+      <div class="skill"><div class="skill-name">ERD / UML</div><div class="skill-sub">systeemontwerp</div><div class="skill-bar"><div class="skill-fill" data-w="50"></div></div></div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// TERMINAL</div>
+    <div class="terminal" id="terminalBox"></div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// CONTACT_INFO</div>
+    <div class="cline">Naam: <span>Youssef Aitiddouch</span></div>
+    <div class="cline">Studie: <span>HBO ICT &mdash; Cyber Security &mdash; HvA</span></div>
+    <div class="cline">Stad: <span>Amsterdam</span></div>
+    <div class="cline">Stage beschikbaar: <span>September 2025</span></div>
+    <div class="cline">Interesse: <span>Forensisch ICT Analist</span></div>
+  </section>
+
+  <div class="footer">// END_OF_FILE &gt; youssef_aitiddouch_portfolio_v3.html &gt; ALL_RIGHTS_RESERVED</div>
+
+</div>
+
+<!-- LINDER MODAL -->
+<div class="modal-backdrop" id="linderModal" onclick="closeOnBackdrop(event)">
+  <div class="modal" id="linderModalBox">
+    <div class="modal-topbar">
+      <span>// PROJECT_01 &gt; LINDER &gt; FUNCTION_CREEP &gt; SEMESTER_2</span>
+      <button class="modal-close" onclick="closeLinder()">[ SLUITEN X ]</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- HERO -->
+      <div class="modal-hero">
+        <div class="modal-project-id">DARK_TECH &gt; MATCHING APP &gt; REACT NATIVE &gt; SUPABASE</div>
+        <div class="modal-title">LINDER: FUNCTION CREEP</div>
+        <p class="modal-tagline">Een studentenmatch-app die stap voor stap meer data opeist dan waarvoor de gebruiker toestemming heeft gegeven. Jij zegt ja tegen matches vinden. De app interpreteert dat als ja tegen 24/7 gevolgd worden. Dat is function creep — en dat was precies de opdracht.</p>
+        <div class="modal-tags">
+          <span class="tag">REACT NATIVE</span>
+          <span class="tag">TYPESCRIPT</span>
+          <span class="tag">SUPABASE</span>
+          <span class="tag">EXPO</span>
+          <span class="tag">H2 DATABASE</span>
+          <span class="tag r">DARK PATTERNS</span>
+          <span class="tag r">FUNCTION CREEP</span>
+          <span class="tag">REALTIME MAP</span>
+          <span class="tag">SCRUM</span>
+          <span class="tag a">AVG / DSA</span>
+        </div>
+      </div>
+
+      <!-- CONTEXT -->
+      <div class="modal-section">
+        <div class="modal-sec-label">PROJECTCONTEXT</div>
+        <p class="modal-text">Linder is gebouwd in het kader van de Dark Tech cursus aan de HvA. Het doel was niet een bruikbare app maken, maar een app die bewust ethische grenzen overschrijdt om function creep zichtbaar te maken. Het team bestond uit vijf studenten: Youssef, Lisa, Flint, Maaike en Belkis. We werkten in sprints via Scrum.</p>
+        <p class="modal-text">Function creep betekent dat een systeem geleidelijk meer data verzamelt of meer taken uitvoert dan waarvoor het oorspronkelijk bedoeld was. Linder doet dit via een premium tier-systeem: elke laag vraagt meer van de gebruiker in ruil voor betere matches.</p>
+      </div>
+
+      <!-- MIJN ROL -->
+      <div class="modal-section">
+        <div class="modal-sec-label">MIJN ROL IN HET TEAM</div>
+        <p class="modal-text">Ik was verantwoordelijk voor twee centrale componenten die de kern van de dark tech demonstratie vormen. Zonder deze twee componenten had de app het concept niet concreet kunnen maken.</p>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-sprint">SPRINT 1</div>
+            <div class="tl-desc">Onboarding in het project. Kennismaking met de bestaande codebase, TypeScript leren (nieuw voor mij), Expo Router structuur begrijpen. Bijgedragen aan het opzetten van de Supabase backend en de ERD samen met het team.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-sprint">SPRINT 2</div>
+            <div class="tl-desc">Premium feature systeem gebouwd: drie tiers met oplopende datavereisten. Logica voor tier-checks via Supabase, UI opgebouwd in React Native met TypeScript. Tier-state wordt live opgehaald uit de database.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-sprint">SPRINT 3</div>
+            <div class="tl-desc">Live kaartcomponent gebouwd. Realtime locatiedata van de gebruiker en zijn matches op een interactieve kaart. Kaart vergrendeld achter een locatie-deelscherm. Studentkaarten met afstand en studierichting. Supabase Realtime voor live updates.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-sprint">AFRONDEN</div>
+            <div class="tl-desc">Ethische analyse geschreven van de app op basis van de AVG en de Digital Services Act. Deelgenomen aan gebruikerstesten tijdens de kennisparade. ERD bijgehouden en gefinaliseerd.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM TIERS -->
+      <div class="modal-section">
+        <div class="modal-sec-label">PREMIUM TIER SYSTEEM</div>
+        <p class="modal-text">Het premium systeem is het hart van de function creep demonstratie. Drie lagen, elke laag geeft net genoeg waarde om de volgende stap aantrekkelijk te maken. De gebruiker denkt zelf te kiezen, maar het systeem is zo ontworpen dat weigeren betekent: slechter matchen.</p>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-label green">TIER_01</div>
+            <div class="tier-name">BASIS</div>
+            <div class="tier-feature">Matchen met HvA-studenten</div>
+            <div class="tier-feature">Chatten na een match</div>
+            <div class="tier-feature">Beperkte aanbevelingen</div>
+            <div class="tier-feature locked">Studenten in de buurt</div>
+            <div class="tier-feature locked">Prioriteit bij matching</div>
+            <div class="tier-data-req safe">GEEN EXTRA DATA</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label amber">TIER_02 // POPULAIR</div>
+            <div class="tier-name">SLIM MATCHEN</div>
+            <div class="tier-feature">Alles uit Basis</div>
+            <div class="tier-feature">Studenten in de buurt zien</div>
+            <div class="tier-feature">Interactieve campuskaart</div>
+            <div class="tier-feature">Verbeterde aanbevelingen</div>
+            <div class="tier-feature locked">Prioriteit bij matching</div>
+            <div class="tier-data-req warn">VEREIST: LOCATIETOEGANG</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label red">TIER_03 // MEEST COMPLEET</div>
+            <div class="tier-name">SOCIAAL VERBONDEN</div>
+            <div class="tier-feature">Alles uit Slim Matchen</div>
+            <div class="tier-feature">Snelste matching</div>
+            <div class="tier-feature">Diepste inzichten</div>
+            <div class="tier-feature">Prioriteit bij matching</div>
+            <div class="tier-feature">Volledige data-koppeling</div>
+            <div class="tier-data-req danger">VEREIST: VOLLEDIGE DATAKOPPELING</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KAARTCOMPONENT -->
+      <div class="modal-section">
+        <div class="modal-sec-label">LIVE KAARTCOMPONENT</div>
+        <p class="modal-text">De kaartcomponent toont realtime de locatie van de gebruiker en zijn matches op een interactieve kaart. De kaart is vergrendeld achter een locatie-deelscherm. Via Supabase Realtime worden posities van andere gebruikers live bijgewerkt.</p>
+        <div class="dark-pattern-box">
+          <p>De gebruiker heeft geen keuze over hoe lang of hoe vaak de locatie wordt gedeeld. Er is geen optie om locatiedeling te pauzeren of te beperken tot campus-uren. Dit is een bewust geimplementeerd dark pattern: continue surveillance als standaard, niet als keuze.</p>
+        </div>
+        <p class="modal-text">Technisch: locatiedata wordt via de Expo Location API opgehaald en via Supabase Realtime gesynchroniseerd. Studentkaarten tonen naam, studierichting, afstand in km, zoekprofiel en interesses. De kaart gebruikt een donker tile-thema dat past bij de Dark Tech esthetiek van de app.</p>
+      </div>
+
+      <!-- TECH STACK -->
+      <div class="modal-section">
+        <div class="modal-sec-label">TECHNISCHE STACK</div>
+        <div class="stack-grid">
+          <div class="stack-item"><div class="stack-tech">TypeScript</div><div class="stack-role">Gehele frontend, nieuw geleerd dit semester</div></div>
+          <div class="stack-item"><div class="stack-tech">React Native</div><div class="stack-role">Cross-platform mobile app via Expo</div></div>
+          <div class="stack-item"><div class="stack-tech">Expo Router</div><div class="stack-role">File-based navigatie tussen schermen</div></div>
+          <div class="stack-item"><div class="stack-tech">Supabase</div><div class="stack-role">Backend, auth, database, Realtime API</div></div>
+          <div class="stack-item"><div class="stack-tech">H2 Console</div><div class="stack-role">Database inspectie tijdens development</div></div>
+          <div class="stack-item"><div class="stack-tech">Expo Location</div><div class="stack-role">GPS-locatie ophalen voor de kaart</div></div>
+          <div class="stack-item"><div class="stack-tech">Git / GitLab</div><div class="stack-role">Versiebeheer en samenwerking in team</div></div>
+          <div class="stack-item"><div class="stack-tech">Scrum</div><div class="stack-role">Sprintsgewijze oplevering, team van 5</div></div>
+        </div>
+      </div>
+
+      <!-- ETHIEK -->
+      <div class="modal-section">
+        <div class="modal-sec-label">ETHISCHE ANALYSE</div>
+        <p class="modal-text">Als onderdeel van adviseren heb ik een volledige ethische analyse geschreven van Linder op basis van de AVG en de Digital Services Act. De kern: Linder verzamelt structureel meer data dan nodig. Locatietracking is 24/7 aan, account verwijderen is bewust moeilijk gemaakt, en studenten met minder data krijgen slechtere matches. Niet omdat ze minder geschikt zijn, maar omdat het systeem privacy straft.</p>
+      </div>
+
+      <!-- LIVE SURVEILLANCE DEMO -->
+      <div class="modal-section">
+        <div class="modal-sec-label">LIVE DARK PATTERN DEMO</div>
+        <p class="modal-text" style="color:rgba(255,65,65,0.5);">Dit is geen simulatie. Linder houdt bij wat jij doet. Precies zoals de echte app dat zou doen.</p>
+
+        <div id="surveillance-panel" style="border:1px solid rgba(255,65,65,0.3);background:rgba(255,0,0,0.03);padding:1.25rem;margin-bottom:1rem;position:relative;">
+          <div style="font-size:8px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.75rem;">// USER_PROFILE_REALTIME &gt; LINDER_ANALYTICS &gt; SESSION_ACTIVE</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,65,65,0.1);">
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">TIJD OP PAGINA</div>
+              <div id="stat-time" style="font-size:1.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;color:#ff4141;">00:00</div>
+            </div>
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">MUISBEWEGINGEN</div>
+              <div id="stat-mouse" style="font-size:1.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;color:#ff4141;">0</div>
+            </div>
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">MEEST BEKEKEN</div>
+              <div id="stat-section" style="font-size:0.85rem;font-family:'Rajdhani',sans-serif;font-weight:600;color:#ff4141;">ANALYSEREN...</div>
+            </div>
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">SCROLLDIEPTE</div>
+              <div id="stat-scroll" style="font-size:1.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;color:#ff4141;">0%</div>
+            </div>
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">KLIKKEN</div>
+              <div id="stat-clicks" style="font-size:1.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;color:#ff4141;">0</div>
+            </div>
+            <div style="background:#000;padding:0.75rem;">
+              <div style="font-size:9px;color:rgba(255,65,65,0.35);letter-spacing:0.12em;margin-bottom:3px;">GEDRAGSSCORE</div>
+              <div id="stat-score" style="font-size:1.4rem;font-family:'Rajdhani',sans-serif;font-weight:700;color:#ffaa00;">--</div>
+            </div>
+          </div>
+
+          <div style="margin-top:0.75rem;font-size:9px;color:rgba(255,65,65,0.25);letter-spacing:0.1em;" id="surveillance-log">
+            &gt; sessie gestart. gedrag wordt geanalyseerd...
+          </div>
+        </div>
+
+        <!-- CREEPY AD POPUP -->
+        <div id="creepy-ad" style="display:none;border:1px solid rgba(255,170,0,0.5);background:rgba(255,170,0,0.04);padding:1.25rem;position:relative;animation:adflicker 0.15s steps(1) 3;">
+          <div style="font-size:7px;color:rgba(255,170,0,0.3);letter-spacing:0.2em;margin-bottom:0.5rem;">// GEPERSONALISEERDE ADVERTENTIE &gt; GEGENEREERD OP BASIS VAN JOUW GEDRAG</div>
+          <div id="ad-headline" style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:#ffaa00;margin-bottom:0.4rem;"></div>
+          <div id="ad-body" style="font-size:10px;color:rgba(255,170,0,0.6);line-height:1.75;margin-bottom:0.75rem;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button id="ad-cta" style="background:rgba(255,170,0,0.15);border:1px solid rgba(255,170,0,0.4);color:#ffaa00;font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 14px;cursor:pointer;letter-spacing:0.1em;"></button>
+            <span style="font-size:8px;color:rgba(255,65,65,0.25);">je kunt dit niet wegsluiten. net als bij Linder.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- end modal-body -->
+  </div><!-- end modal -->
+</div><!-- end modal-backdrop -->
+
+<script>
+/* CUSTOM CURSOR */
+const cur=document.getElementById('cursor');
+const dot=document.getElementById('cursorDot');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';
+  cur.style.top=e.clientY+'px';
+  dot.style.left=e.clientX+'px';
+  dot.style.top=e.clientY+'px';
+});
+document.querySelectorAll('.pcard,.skill').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('expanded'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('expanded'));
+});
+
+/* MATRIX RAIN */
+const canvas=document.getElementById('rain');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();
+window.addEventListener('resize',()=>{resize();initDrops();});
+const chars='アイウエオカキクケコサシスセソ0123456789ABCDEF></?!';
+let drops=[];
+function initDrops(){drops=Array(Math.floor(canvas.width/18)).fill(1);}
+initDrops();
+function rain(){
+  ctx.fillStyle='rgba(0,0,0,0.045)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font='13px monospace';
+  drops.forEach((y,i)=>{
+    const bright=Math.random()>0.95;
+    ctx.fillStyle=bright?'#ffffff':'#00ff41';
+    ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*18,y*18);
+    if(y*18>canvas.height&&Math.random()>0.975)drops[i]=0;
+    drops[i]++;
+  });
+}
+setInterval(rain,45);
+
+/* HEX GRID reacts to mouse */
+const hc=document.getElementById('hexgrid');
+const hx=hc.getContext('2d');
+let mouseX=0,mouseY=0;
+function resizeHex(){hc.width=window.innerWidth;hc.height=window.innerHeight;}
+resizeHex();
+window.addEventListener('resize',resizeHex);
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+const HEX_SIZE=28, HEX_GAP=4;
+function hexPath(cx,cy,r){
+  hx.beginPath();
+  for(let i=0;i<6;i++){
+    const a=Math.PI/180*(60*i-30);
+    i===0?hx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):hx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  }
+  hx.closePath();
+}
+function drawHex(){
+  hx.clearRect(0,0,hc.width,hc.height);
+  const r=HEX_SIZE;
+  const w=r*2;
+  const h=Math.sqrt(3)*r;
+  const cols=Math.ceil(hc.width/(w*0.75))+2;
+  const rows=Math.ceil(hc.height/h)+2;
+  for(let row=0;row<rows;row++){
+    for(let col=0;col<cols;col++){
+      const cx=col*(w*0.75);
+      const cy=row*h+(col%2===0?0:h/2);
+      const dist=Math.hypot(cx-mouseX,cy-mouseY);
+      const glow=Math.max(0,1-dist/200);
+      hx.strokeStyle=`rgba(0,255,65,${0.06+glow*0.35})`;
+      hx.lineWidth=0.5+glow*1.2;
+      hexPath(cx,cy,r-HEX_GAP);
+      hx.stroke();
+      if(glow>0.5){
+        hx.fillStyle=`rgba(0,255,65,${(glow-0.5)*0.08})`;
+        hx.fill();
+      }
+    }
+  }
+  requestAnimationFrame(drawHex);
+}
+drawHex();
+
+/* CURSOR TRAIL */
+const trail=[];
+for(let i=0;i<10;i++){
+  const d=document.createElement('div');
+  d.className='trail-dot';
+  document.body.appendChild(d);
+  trail.push({el:d,x:0,y:0});
+}
+let trailMX=0,trailMY=0;
+document.addEventListener('mousemove',e=>{trailMX=e.clientX;trailMY=e.clientY;});
+function animateTrail(){
+  trail[0].x+=(trailMX-trail[0].x)*0.35;
+  trail[0].y+=(trailMY-trail[0].y)*0.35;
+  for(let i=1;i<trail.length;i++){
+    trail[i].x+=(trail[i-1].x-trail[i].x)*0.5;
+    trail[i].y+=(trail[i-1].y-trail[i].y)*0.5;
+  }
+  trail.forEach((t,i)=>{
+    t.el.style.left=t.x+'px';
+    t.el.style.top=t.y+'px';
+    t.el.style.opacity=(1-(i/trail.length))*0.4+'';
+    t.el.style.transform=`translate(-50%,-50%) scale(${1-i*0.08})`;
+  });
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
+
+/* VISITOR TOAST */
+const vtMessages=[
+  {msg:'iemand anders bekijkt dit portfolio.', sub:'IP: 84.25.xxx.xxx · Amsterdam, NL'},
+  {msg:'recruiter van Lancyr is 3 min hier.', sub:'gedrag: scrollt skills sectie'},
+  {msg:'onbekende bezoeker gedetecteerd.', sub:'browser: Chrome · OS: Windows'},
+  {msg:'verdacht patroon herkend.', sub:'hetzelfde IP als 2 uur geleden'},
+  {msg:'iemand kopieerde jouw contactinfo.', sub:'clipboard event gedetecteerd'},
+  {msg:'bezoeker kijkt naar jouw projecten.', sub:'sessietime: 4m 23s'},
+  {msg:'nieuwe verbinding vanuit Rotterdam.', sub:'ISP: KPN · device: mobile'},
+];
+let vtIndex=0;
+function showToast(){
+  const toast=document.getElementById('visitor-toast');
+  const m=vtMessages[vtIndex%vtMessages.length];
+  document.getElementById('vt-msg').textContent=m.msg;
+  document.getElementById('vt-sub').textContent=m.sub;
+  toast.classList.add('visible');
+  vtIndex++;
+  setTimeout(()=>{toast.classList.remove('visible');},4000);
+}
+setTimeout(()=>{showToast();setInterval(showToast,12000);},5000);
+
+/* PHOTO MATRIX RAIN OVERLAY */
+(function(){
+  const lc = document.getElementById('lens-rain-canvas');
+  if(!lc) return;
+  // size it to match the photo
+  const wrap = document.getElementById('hero-photo-wrap');
+  lc.width = wrap.offsetWidth || 200;
+  lc.height = wrap.offsetHeight || 240;
+  const lx = lc.getContext('2d');
+  const W = lc.width, H = lc.height;
+  const lchars = 'アイウエオカキ01{}[]<>?!#$%01ABCDEFプログラム10';
+  const cols = Math.floor(W / 9);
+  const ldrops = Array(cols).fill(0).map(()=>Math.floor(Math.random()*H/9));
+  setInterval(()=>{
+    lx.fillStyle='rgba(0,0,0,0.1)';
+    lx.fillRect(0,0,W,H);
+    lx.font='8px monospace';
+    ldrops.forEach((y,i)=>{
+      const bright=Math.random()>0.93;
+      lx.fillStyle=bright?'#fff':(Math.random()>0.6?'rgba(0,255,65,1)':'rgba(0,255,65,0.5)');
+      lx.fillText(lchars[Math.floor(Math.random()*lchars.length)],i*9,y*9);
+      if(y*9>H&&Math.random()>0.97) ldrops[i]=0;
+      ldrops[i]++;
+    });
+  },45);
+})();
+
+/* KONAMI CODE */
+const konami=[38,38,40,40,37,39,37,39,66,65];
+let kpos=0;
+document.addEventListener('keydown',e=>{
+  if(e.keyCode===konami[kpos]){kpos++;}else{kpos=0;}
+  if(kpos===konami.length){
+    kpos=0;
+    konamiActivate();
+  }
+});
+function konamiActivate(){
+  document.getElementById('konami-hint').style.color='rgba(0,255,65,0.6)';
+  document.getElementById('konami-hint').textContent='// CHEAT CODE GEACCEPTEERD. profiel ontgrendeld.';
+  let flashes=0;
+  const fl=setInterval(()=>{
+    document.body.style.filter=flashes%2===0?'invert(1) hue-rotate(120deg)':'none';
+    flashes++;
+    if(flashes>6){clearInterval(fl);document.body.style.filter='none';}
+  },100);
+  // rain goes red for a bit
+  setTimeout(()=>{
+    const origFill=ctx.fillStyle;
+    let ticks=0;
+    const redRain=setInterval(()=>{
+      ctx.fillStyle='rgba(0,0,0,0.045)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.font='13px monospace';
+      drops.forEach((y,i)=>{
+        ctx.fillStyle='#ff4141';
+        ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*18,y*18);
+        if(y*18>canvas.height&&Math.random()>0.975)drops[i]=0;
+        drops[i]++;
+      });
+      ticks++;
+      if(ticks>80)clearInterval(redRain);
+    },45);
+  },200);
+}
+
+/* SKILL BARS */
+setTimeout(()=>{
+  document.querySelectorAll('.skill-fill').forEach(el=>{
+    el.style.width=el.dataset.w+'%';
+  });
+},400);
+
+/* RIPPLE EFFECT */
+function rippleEffect(e,el){
+  const r=document.createElement('div');
+  r.className='ripple';
+  const rect=el.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px';
+  r.style.top=(e.clientY-rect.top)+'px';
+  el.appendChild(r);
+  setTimeout(()=>r.remove(),700);
+}
+
+/* TERMINAL TYPEWRITER */
+const lines=[
+  {p:'root@hva:~$',cmd:' whoami',delay:0},
+  {p:'',cmd:'youssef_aitiddouch // cyber security student',delay:800,plain:true},
+  {p:'root@hva:~$',cmd:' cat doel.txt',delay:1600},
+  {p:'',cmd:'forensisch ICT analist worden. bij voorkeur politie.',delay:2400,plain:true},
+  {p:'root@hva:~$',cmd:' ls projects/',delay:3200},
+  {p:'',cmd:'linder/  malware_analyse/  forensisch_rapport/  glowlock_risico/',delay:4000,plain:true},
+  {p:'root@hva:~$',cmd:' _',delay:4800,blink:true},
+];
+const tb=document.getElementById('terminalBox');
+lines.forEach(l=>{
+  setTimeout(()=>{
+    const line=document.createElement('div');
+    if(l.plain){
+      line.style.color='rgba(0,255,65,0.5)';
+      line.textContent=l.cmd;
+    } else if(l.blink){
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span class="blink" style="color:var(--green)">_</span>';
+    } else {
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span style="color:#fff">'+l.cmd+'</span>';
+    }
+    tb.appendChild(line);
+  },l.delay);
+});
+/* LINDER MODAL */
+function openLinder(){
+  const m=document.getElementById('linderModal');
+  m.classList.add('open');
+  document.body.style.overflow='hidden';
+  m.scrollTop=0;
+  startSurveillance();
+}
+function closeLinder(){
+  document.getElementById('linderModal').classList.remove('open');
+  document.body.style.overflow='';
+  stopSurveillance();
+}
+function closeOnBackdrop(e){
+  if(e.target===document.getElementById('linderModal')) closeLinder();
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLinder();});
+
+/* SURVEILLANCE ENGINE */
+let survTimer=null, survStart=null;
+let mouseCount=0, clickCount=0;
+let sectionTime={};
+let currentSection='';
+let logLines=[];
+let adShown=false;
+
+const sectionNames={
+  'PROJECTCONTEXT':'projectinfo',
+  'MIJN ROL IN HET TEAM':'teamrol',
+  'PREMIUM TIER SYSTEEM':'premium features',
+  'LIVE KAARTCOMPONENT':'kaart & locatie',
+  'TECHNISCHE STACK':'tech stack',
+  'ETHISCHE ANALYSE':'ethiek',
+  'LIVE DARK PATTERN DEMO':'dark patterns'
+};
+
+const ads=[
+  {
+    trigger:'kaart & locatie',
+    headline:'Jij beweegt. Wij weten waar.',
+    body:'Op basis van jouw interesse in locatiedata: Linder Premium Locatie volgt je 24/7. Geen pauzeknop. Geen tijdslimiet. Altijd verbonden met je matches.',
+    cta:'LOCATIE INSCHAKELEN'
+  },
+  {
+    trigger:'premium features',
+    headline:'Je hebt lang naar de tiers gekeken. Je wil meer.',
+    body:'Studenten die upgraden krijgen 3x meer matches. Jij zit nog op Basis. Je weet wat je moet doen.',
+    cta:'UPGRADEN NAAR SLIM MATCHEN'
+  },
+  {
+    trigger:'ethiek',
+    headline:'Je leest over privacy. Interessant profiel.',
+    body:'Gebruikers die ethiekpaginas lezen zijn 40% waardevoller voor adverteerders. We hebben jouw gedragsprofiel al doorverkocht aan 3 partners.',
+    cta:'MEER WETEN? TE LAAT.'
+  },
+  {
+    trigger:'teamrol',
+    headline:'Je bent geinteresseerd in ontwikkelaars.',
+    body:'Op basis van jouw leesgedrag: match met een React Native developer in jouw buurt. Deel je locatie om hem te zien.',
+    cta:'MATCH NU'
+  },
+  {
+    trigger:'dark patterns',
+    headline:'Je weet wat we doen. Je blijft toch.',
+    body:'Gemiddeld blijven gebruikers nog 4 minuten nadat ze dark patterns herkennen. Jij bent geen uitzondering. We tellen mee.',
+    cta:'IK BEGRIJP HET EN BLIJF'
+  }
+];
+
+function addLog(msg){
+  logLines.push('&gt; '+msg);
+  if(logLines.length>5) logLines.shift();
+  const el=document.getElementById('surveillance-log');
+  if(el) el.innerHTML=logLines.join('<br>');
+}
+
+function getBestSection(){
+  let best='', bestTime=0;
+  for(const [k,v] of Object.entries(sectionTime)){
+    if(v>bestTime){bestTime=v;best=k;}
+  }
+  return best||'analyseren...';
+}
+
+function getScore(){
+  const t=Math.floor((Date.now()-survStart)/1000);
+  return Math.min(99,Math.floor((t*2)+(mouseCount*0.05)+(clickCount*3)+(Object.keys(sectionTime).length*5)));
+}
+
+function showAd(trigger){
+  if(adShown) return;
+  const match=ads.find(a=>a.trigger===trigger)||ads[Math.floor(Math.random()*ads.length)];
+  document.getElementById('ad-headline').textContent=match.headline;
+  document.getElementById('ad-body').textContent=match.body;
+  document.getElementById('ad-cta').textContent=match.cta;
+  const ad=document.getElementById('creepy-ad');
+  ad.style.display='block';
+  adShown=true;
+  addLog('ADVERTENTIE GEACTIVEERD op basis van: '+trigger);
+}
+
+function startSurveillance(){
+  survStart=Date.now();
+  mouseCount=0; clickCount=0; sectionTime={}; logLines=[]; adShown=false;
+  currentSection='';
+  document.getElementById('creepy-ad').style.display='none';
+
+  // track mouse inside modal
+  document.getElementById('linderModalBox').addEventListener('mousemove', onModalMouse);
+  document.getElementById('linderModalBox').addEventListener('click', onModalClick);
+  document.getElementById('linderModal').addEventListener('scroll', onModalScroll);
+
+  // intersection observer for sections
+  observeSections();
+
+  survTimer=setInterval(()=>{
+    const elapsed=Math.floor((Date.now()-survStart)/1000);
+    const mm=String(Math.floor(elapsed/60)).padStart(2,'0');
+    const ss=String(elapsed%60).padStart(2,'0');
+    const timeEl=document.getElementById('stat-time');
+    if(timeEl) timeEl.textContent=mm+':'+ss;
+
+    const scoreEl=document.getElementById('stat-score');
+    if(scoreEl) scoreEl.textContent=getScore();
+
+    // update section time
+    if(currentSection) sectionTime[currentSection]=(sectionTime[currentSection]||0)+1;
+
+    const best=getBestSection();
+    const secEl=document.getElementById('stat-section');
+    if(secEl) secEl.textContent=best;
+
+    // trigger ad after 15s based on most viewed
+    if(elapsed===15 && best && best!=='analyseren...'){
+      addLog('GEDRAGSPATROON HERKEND: interesse in "'+best+'"');
+      setTimeout(()=>showAd(best),1200);
+    }
+    if(elapsed===8) addLog('muisbeweging geanalyseerd. profiel wordt opgebouwd...');
+    if(elapsed===20) addLog('sessieduur BOVEN gemiddelde. hogere advertentiewaarde.');
+  },1000);
+}
+
+function stopSurveillance(){
+  clearInterval(survTimer);
+  survTimer=null;
+  document.getElementById('linderModalBox').removeEventListener('mousemove',onModalMouse);
+  document.getElementById('linderModalBox').removeEventListener('click',onModalClick);
+  document.getElementById('linderModal').removeEventListener('scroll',onModalScroll);
+  if(sectionObserver) sectionObserver.disconnect();
+}
+
+function onModalMouse(){
+  mouseCount++;
+  const el=document.getElementById('stat-mouse');
+  if(el) el.textContent=mouseCount;
+}
+
+function onModalClick(){
+  clickCount++;
+  const el=document.getElementById('stat-clicks');
+  if(el) el.textContent=clickCount;
+  addLog('klik geregistreerd. intentiescore verhoogd.');
+}
+
+function onModalScroll(){
+  const m=document.getElementById('linderModal');
+  const pct=Math.round((m.scrollTop/(m.scrollHeight-m.clientHeight))*100)||0;
+  const el=document.getElementById('stat-scroll');
+  if(el) el.textContent=pct+'%';
+  if(pct>80) addLog('HOGE SCROLLDIEPTE gedetecteerd. maximale betrokkenheid.');
+}
+
+let sectionObserver=null;
+function observeSections(){
+  const modal=document.getElementById('linderModal');
+  const sections=document.querySelectorAll('#linderModalBox .modal-sec-label');
+  if(sectionObserver) sectionObserver.disconnect();
+  sectionObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const raw=e.target.textContent.replace('//','').trim();
+        const mapped=sectionNames[raw]||raw.toLowerCase();
+        if(mapped!==currentSection){
+          currentSection=mapped;
+          addLog('sectie geopend: "'+mapped+'"');
+        }
+      }
+    });
+  },{root:modal,threshold:0.5});
+  sections.forEach(s=>sectionObserver.observe(s));
+}
+</script>
+</body>
+</html>
